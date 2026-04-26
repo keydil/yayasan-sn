@@ -4,22 +4,7 @@ __v0_devtools.tsx
 __v0_jsx-dev-runtime.ts
 .snowflake/
 .v0-trash/
-.vercel/
 next.user-config.*
-
-# Environment variables
-.env*.local
-
-# Common ignores
-node_modules
-.next/
-.DS_Store
-
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# IDE / Text Editor 
-.vscode/
-.idea/
 
 # dependencies
 /node_modules
@@ -57,13 +42,15 @@ yarn-error.log*
 
 # vercel
 .vercel
+.vercel/
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-# info older
-SETUP_AUTH.md
+# IDE / Text Editor 
+.vscode/
+.idea/
 
 # Ignore AI generated docs
 *.md
