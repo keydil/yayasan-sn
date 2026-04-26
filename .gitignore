@@ -64,3 +64,8 @@ next-env.d.ts
 
 # info older
 SETUP_AUTH.md
+
+# Ignore AI generated docs
+*.md
+!README.md
+*.txt
