@@ -7,10 +7,10 @@ export const metadata = {
 };
 
 const impactStats = [
-  { number: '150+', label: 'Anggota Aktif', color: 'bg-emerald-50 text-emerald-700' },
+  { number: '150+', label: 'Bidang Kegiatan', color: 'bg-emerald-50 text-emerald-700' },
   { number: '50,000+', label: 'Pohon Ditanam', color: 'bg-blue-50 text-blue-700' },
-  { number: '25', label: 'Program Berjalan', color: 'bg-amber-50 text-amber-700' },
-  { number: '6', label: 'Divisi Aktif', color: 'bg-purple-50 text-purple-700' },
+  { number: '25', label: 'Kegiatan', color: 'bg-amber-50 text-amber-700' },
+  { number: '6', label: 'Afiliasi', color: 'bg-purple-50 text-purple-700' },
 ];
 
 const programs = [
@@ -203,41 +203,68 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Latest Articles */}
+      {/* Latest Articles & Gallery */}
       <section className="bg-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-4 mb-16">
-            <h2 className="text-4xl font-bold text-gray-900">Artikel & Berita Terbaru</h2>
-            <p className="text-xl text-gray-600">Tetap update dengan perkembangan dan pengetahuan lingkungan</p>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            {/* Left Column: Articles */}
+            <div>
+              <div className="space-y-4 mb-12">
+                <h2 className="text-4xl font-bold text-gray-900">Artikel & Berita Terbaru</h2>
+                <p className="text-xl text-gray-600">Tetap update dengan perkembangan lingkungan</p>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.map((article) => (
-              <article key={article.id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden flex flex-col">
-                <div className="h-48 bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-6xl"></div>
-                <div className="p-6 flex flex-col flex-1">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
-                      {article.category}
-                    </span>
-                    <span className="text-xs text-gray-500">{article.date}</span>
+              <div className="space-y-6">
+                {articles.slice(0, 3).map((article) => (
+                  <article key={article.id} className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden flex flex-col sm:flex-row">
+                    <div className="sm:w-48 h-48 sm:h-auto bg-gradient-to-br from-emerald-400 to-emerald-600 shrink-0"></div>
+                    <div className="p-6 flex flex-col flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+                          {article.category}
+                        </span>
+                        <span className="text-xs text-gray-500">{article.date}</span>
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">{article.title}</h3>
+                      <Link href={`/berita/${article.id}`} className="text-emerald-600 text-sm font-semibold hover:text-emerald-700 mt-auto">
+                        Baca Selengkapnya →
+                      </Link>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <Link href="/berita">
+                  <Button variant="outline" className="px-8 py-3 border-emerald-600 text-emerald-600">
+                    Lihat Semua Berita
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Column: Gallery */}
+            <div>
+              <div className="space-y-4 mb-12">
+                <h2 className="text-4xl font-bold text-gray-900">Galeri Foto</h2>
+                <p className="text-xl text-gray-600">Dokumentasi aksi nyata kami di lapangan</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {[1, 2, 3, 4].map((item) => (
+                  <div key={item} className="aspect-square bg-gray-200 rounded-xl overflow-hidden relative group">
+                    <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                    <div className="absolute inset-0 bg-emerald-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-white font-medium">Lihat Foto</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 flex-1">{article.title}</h3>
-                  <p className="text-gray-600 mb-4">{article.excerpt}</p>
-                  <Link href={`/berita/${article.id}`} className="text-emerald-600 font-semibold hover:text-emerald-700">
-                    Baca Selengkapnya →
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
+                ))}
+              </div>
+            </div>
 
-          <div className="text-center mt-12">
-            <Link href="/berita">
-              <Button variant="outline" className="px-8 py-3 text-lg border-emerald-600 text-emerald-600">
-                Lihat Semua Berita
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
@@ -264,22 +291,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-emerald-600 text-white py-16 lg:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
-          <h2 className="text-4xl lg:text-5xl font-bold text-balance">
-            Siap Membuat Perbedaan?
-          </h2>
-          <p className="text-xl text-emerald-100">
-            Bergabunglah dengan ribuan individu yang berkomitmen untuk kelestarian lingkungan Indonesia.
-          </p>
-          <Link href="/admin/login">
-            <Button className="bg-white text-emerald-600 hover:bg-emerald-50 px-8 py-3 text-lg font-semibold rounded-lg">
-              Daftar Anggota Sekarang
-            </Button>
-          </Link>
-        </div>
-      </section>
+      {/* Aesthetic Green Section */}
+      <section className="bg-emerald-600 h-24 lg:h-32 w-full"></section>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-12">

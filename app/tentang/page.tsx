@@ -150,36 +150,28 @@ export default function TentangPage() {
         </div>
       </section>
 
-      {/* Story Section */}
+      {/* Organizational Structure */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 text-center">
-            Cerita Kami
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            Struktur Organisasi
           </h2>
+          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto text-balance">
+            Susunan kepengurusan Yayasan Sahabat Nusantara yang berkolaborasi untuk mewujudkan visi dan misi lingkungan berkelanjutan.
+          </p>
 
-          <div className="space-y-6 text-gray-700 leading-relaxed">
-            <p>
-              Yayasan Sahabat Nusantara didirikan pada tahun 2014 oleh sekelompok profesional yang peduli terhadap masa depan
-              lingkungan Indonesia. Kami bermula dari kesadaran bahwa tantangan lingkungan memerlukan pendekatan holistik yang melibatkan
-              penelitian, advokasi, pendidikan, dan aksi nyata.
-            </p>
-
-            <p>
-              Sejak awal, kami berkomitmen untuk bekerja sama dengan masyarakat lokal, pemerintah, dan sektor swasta untuk menciptakan
-              solusi berkelanjutan. Kami percaya bahwa perubahan sejati datang dari pemahaman mendalam tentang masalah dan kolaborasi
-              yang autentik.
-            </p>
-
-            <p>
-              Hingga saat ini, kami telah berhasil menjalankan lebih dari 25 program di berbagai bidang, mulai dari konservasi hutan dan
-              laut, pertanian berkelanjutan, energi terbarukan, hingga pendidikan lingkungan. Lebih dari 150 profesional berdedikasi telah
-              bergabung dengan kami dalam perjalanan ini.
-            </p>
-
-            <p>
-              Ke depannya, kami akan terus berinovasi dan memperluas jangkauan program kami untuk mencapai lebih banyak komunitas dan
-              menciptakan dampak lingkungan yang lebih besar di seluruh Indonesia.
-            </p>
+          <div className="bg-white p-4 sm:p-8 rounded-2xl shadow-sm border border-gray-100 mx-auto">
+            <div className="aspect-video w-full relative bg-gray-100 rounded-xl overflow-hidden flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
+              <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+              <p className="text-gray-500 font-medium">Bagan Struktur Organisasi (Format JPG)</p>
+              <p className="text-gray-400 text-sm mt-2">Placeholder gambar akan diganti dengan desain struktur aktual</p>
+            </div>
+            
+            <div className="mt-8 text-left text-gray-700 leading-relaxed max-w-3xl mx-auto">
+              <p>
+                Struktur organisasi kami dirancang untuk memastikan transparansi, efisiensi, dan kolaborasi optimal di setiap tingkat operasional. Mulai dari dewan pembina hingga divisi-divisi eksekusi program di lapangan.
+              </p>
+            </div>
           </div>
         </div>
       </section>

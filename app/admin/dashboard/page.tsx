@@ -24,19 +24,19 @@ export default function DashboardPage() {
 
           <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200 hover:shadow-lg transition-shadow">
             <div className="text-5xl font-bold text-blue-600 mb-2">120</div>
-            <p className="text-gray-600 font-medium">Anggota Aktif</p>
+            <p className="text-gray-600 font-medium">Bidang Kegiatan</p>
             <p className="text-sm text-gray-500 mt-2">Anggota dengan status aktif</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200 hover:shadow-lg transition-shadow">
             <div className="text-5xl font-bold text-amber-600 mb-2">25</div>
-            <p className="text-gray-600 font-medium">Program Berjalan</p>
+            <p className="text-gray-600 font-medium">Kegiatan</p>
             <p className="text-sm text-gray-500 mt-2">Program aktif saat ini</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200 hover:shadow-lg transition-shadow">
             <div className="text-5xl font-bold text-purple-600 mb-2">6</div>
-            <p className="text-gray-600 font-medium">Divisi Aktif</p>
+            <p className="text-gray-600 font-medium">Afiliasi</p>
             <p className="text-sm text-gray-500 mt-2">Divisi dalam organisasi</p>
           </div>
         </div>

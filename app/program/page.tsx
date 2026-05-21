@@ -162,25 +162,21 @@ export default function ProgramPage() {
       <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 text-center">
-            Hasil Program
+            Program Kegiatan
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <Card className="bg-white border-0 p-6 sm:p-8 text-center">
               <div className="text-4xl font-bold text-emerald-600 mb-2">25+</div>
-              <p className="text-gray-600">Program Berjalan</p>
+              <p className="text-gray-600">Program selesai</p>
             </Card>
             <Card className="bg-white border-0 p-6 sm:p-8 text-center">
               <div className="text-4xl font-bold text-emerald-600 mb-2">150+</div>
-              <p className="text-gray-600">Anggota Aktif</p>
+              <p className="text-gray-600">Program berjalan</p>
             </Card>
             <Card className="bg-white border-0 p-6 sm:p-8 text-center">
               <div className="text-4xl font-bold text-emerald-600 mb-2">50K+</div>
-              <p className="text-gray-600">Pohon Ditanam</p>
-            </Card>
-            <Card className="bg-white border-0 p-6 sm:p-8 text-center">
-              <div className="text-4xl font-bold text-emerald-600 mb-2">10</div>
-              <p className="text-gray-600">Tahun Operasi</p>
+              <p className="text-gray-600">Program selanjutnya</p>
             </Card>
           </div>
         </div>

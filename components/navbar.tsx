@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
 import { Leaf } from 'lucide-react';
+import { DonasiModal } from '@/components/donasi-modal';
 
 export function Navbar() {
 const [isOpen, setIsOpen] = useState(false);
@@ -50,14 +51,15 @@ return (
 
             {/* CTA and Admin */}
             <div className="flex items-center gap-2">
+                <DonasiModal />
                 {!isAuthenticated ? (
                 <Link href="/admin">
-                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white hidden sm:flex">
                     Daftar Anggota
                 </Button>
                 </Link>
                 ) : (
-                <Button size="sm" variant="outline" onClick={logout}>
+                <Button size="sm" variant="outline" onClick={logout} className="hidden sm:flex">
                     Logout
                 </Button>
                 )}
