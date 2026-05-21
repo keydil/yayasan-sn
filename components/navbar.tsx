@@ -52,17 +52,7 @@ return (
             {/* CTA and Admin */}
             <div className="flex items-center gap-2">
                 <DonasiModal />
-                {!isAuthenticated ? (
-                <Link href="/admin">
-                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white hidden sm:flex">
-                    Daftar Anggota
-                </Button>
-                </Link>
-                ) : (
-                <Button size="sm" variant="outline" onClick={logout} className="hidden sm:flex">
-                    Logout
-                </Button>
-                )}
+
 
                 {/* Mobile Menu Button */}
                 <button onClick={()=> setIsOpen(!isOpen)}

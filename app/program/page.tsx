@@ -191,11 +191,6 @@ export default function ProgramPage() {
           <p className="text-lg text-emerald-50 text-balance">
             Bergabunglah dengan kami dalam misi pelestarian lingkungan. Setiap kontribusi memiliki dampak nyata.
           </p>
-          <a href="/admin">
-            <button className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition-colors">
-              Daftar Sekarang
-            </button>
-          </a>
         </div>
       </section>
     </main>
