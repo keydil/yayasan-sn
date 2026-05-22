@@ -23,6 +23,7 @@ const navLinks = [
 { href: '/tentang', label: 'Tentang' },
 { href: '/program', label: 'Program' },
 { href: '/berita', label: 'Berita' },
+{ href: '/galeri', label: 'Galeri' },
 ];
 
 return (

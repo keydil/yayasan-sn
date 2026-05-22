@@ -124,34 +124,8 @@ export default function BeritaPage() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-emerald-600 to-emerald-700">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white text-balance">
-              Berlangganan Newsletter
-            </h2>
-
-            <p className="text-lg text-emerald-50 text-balance">
-              Dapatkan berita dan artikel terbaru langsung ke email Anda.
-            </p>
-
-            <form className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Masukkan email Anda"
-                className="flex-grow px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-white text-emerald-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap"
-              >
-                Berlangganan
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
+      {/* Aesthetic Green Section */}
+      <section className="bg-emerald-600 h-24 lg:h-32 w-full"></section>
     </main>
   );
 }
