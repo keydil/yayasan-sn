@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 
 const programs = [
   {
@@ -60,31 +59,32 @@ const workSteps = [
   {
     title: 'Riset & Analisis',
     description: 'Kami melakukan penelitian mendalam untuk memahami tantangan lingkungan lokal dan nasional. Tim riset kami mengumpulkan data lapangan, menganalisis tren lingkungan, dan mengidentifikasi area prioritas yang membutuhkan intervensi segera.',
+    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
   },
   {
     title: 'Perencanaan Program',
     description: 'Merancang program yang disesuaikan dengan kebutuhan komunitas dan lingkungan setempat. Proses ini melibatkan konsultasi dengan pemangku kepentingan lokal, pemetaan sumber daya, dan penyusunan timeline yang realistis.',
+    image: 'https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=800&q=80',
   },
   {
     title: 'Implementasi Aksi',
     description: 'Menjalankan program dengan melibatkan komunitas lokal, pemerintah, dan mitra swasta. Setiap program dilaksanakan dengan pendekatan partisipatif untuk memastikan keberlanjutan dan dampak yang maksimal.',
+    image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&q=80',
   },
   {
     title: 'Monitoring & Evaluasi',
     description: 'Memantau dampak program dan terus melakukan perbaikan untuk hasil yang optimal. Kami menggunakan indikator terukur untuk mengevaluasi keberhasilan setiap program secara berkala.',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
   },
   {
     title: 'Pelaporan & Transparansi',
     description: 'Menyusun laporan berkala yang transparan kepada seluruh pemangku kepentingan. Setiap pencapaian, tantangan, dan penggunaan dana didokumentasikan secara terbuka untuk menjaga akuntabilitas organisasi.',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80',
   },
 ];
 
 export default function ProgramPage() {
-  const [openStep, setOpenStep] = useState<number | null>(null);
-
-  const toggleStep = (idx: number) => {
-    setOpenStep(openStep === idx ? null : idx);
-  };
+  const [activeStep, setActiveStep] = useState(0);
 
   return (
     <main className="min-h-screen bg-white">
@@ -131,37 +131,71 @@ export default function ProgramPage() {
         </div>
       </section>
 
-      {/* How We Work - Accordion */}
+      {/* How We Work - Interactive Tabs + Image */}
       <section className="py-12 sm:py-16 lg:py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-12 text-center">
             Bagaimana Kami Bekerja
           </h2>
 
-          <div className="space-y-4">
-            {workSteps.map((step, idx) => (
-              <div key={idx} className="border border-gray-200 rounded-xl overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+            {/* Left: Tabs */}
+            <div className="space-y-3">
+              {workSteps.map((step, idx) => (
                 <button
-                  onClick={() => toggleStep(idx)}
-                  className="w-full flex items-center gap-4 p-5 sm:p-6 text-left hover:bg-emerald-50/50 transition-colors"
+                  key={idx}
+                  onClick={() => setActiveStep(idx)}
+                  className={`w-full text-left p-5 sm:p-6 rounded-xl border-2 transition-all duration-300 ${
+                    activeStep === idx
+                      ? 'border-emerald-500 bg-emerald-50 shadow-md'
+                      : 'border-gray-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/30'
+                  }`}
                 >
-                  <div className="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-lg shrink-0">
-                    {idx + 1}
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shrink-0 transition-colors ${
+                      activeStep === idx
+                        ? 'bg-emerald-600 text-white'
+                        : 'bg-gray-200 text-gray-500'
+                    }`}>
+                      {idx + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className={`text-lg font-bold transition-colors ${
+                        activeStep === idx ? 'text-emerald-700' : 'text-gray-900'
+                      }`}>
+                        {step.title}
+                      </h3>
+                      <div className={`overflow-hidden transition-all duration-300 ${
+                        activeStep === idx ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0'
+                      }`}>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex-1">
-                    {step.title}
-                  </h3>
-                  <ChevronDown className={`w-5 h-5 text-gray-500 shrink-0 transition-transform duration-300 ${openStep === idx ? 'rotate-180' : ''}`} />
                 </button>
-                <div className={`overflow-hidden transition-all duration-300 ${openStep === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                  <div className="px-5 sm:px-6 pb-5 sm:pb-6 pl-[4.5rem]">
-                    <p className="text-gray-600 leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
+              ))}
+            </div>
+
+            {/* Right: Image */}
+            <div className="lg:sticky lg:top-24">
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg relative">
+                {workSteps.map((step, idx) => (
+                  <img
+                    key={idx}
+                    src={step.image}
+                    alt={step.title}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                      activeStep === idx ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                ))}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
+                  <p className="text-white font-bold text-lg">{workSteps[activeStep].title}</p>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
