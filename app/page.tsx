@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Briefcase, CalendarCheck, Handshake } from 'lucide-react';
 
 export const metadata = {
   title: 'Beranda | Yayasan Sahabat Nusantara',
@@ -7,11 +8,16 @@ export const metadata = {
 };
 
 const impactStats = [
-  { number: '150+', label: 'Bidang Kegiatan', color: 'bg-emerald-50 text-emerald-700' },
-  { number: '50,000+', label: 'Pohon Ditanam', color: 'bg-blue-50 text-blue-700' },
-  { number: '25', label: 'Kegiatan', color: 'bg-amber-50 text-amber-700' },
-  { number: '6', label: 'Afiliasi', color: 'bg-purple-50 text-purple-700' },
+  { label: 'Bidang Kegiatan', icon: 'briefcase', color: 'bg-emerald-50 text-emerald-700' },
+  { label: 'Kegiatan', icon: 'calendar', color: 'bg-amber-50 text-amber-700' },
+  { label: 'Afiliasi', icon: 'handshake', color: 'bg-purple-50 text-purple-700' },
 ];
+
+const iconMap: Record<string, React.ReactNode> = {
+  briefcase: <Briefcase className="w-12 h-12" />,
+  calendar: <CalendarCheck className="w-12 h-12" />,
+  handshake: <Handshake className="w-12 h-12" />,
+};
 
 const programs = [
   {
@@ -156,13 +162,13 @@ export default function Home() {
       <section className="bg-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-gray-900 text-center mb-16">Dampak Nyata Kami</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {impactStats.map((stat, idx) => (
               <div
                 key={idx}
-                className={`${stat.color} p-8 rounded-2xl text-center transform hover:scale-105 transition-transform`}
+                className={`${stat.color} p-8 rounded-2xl text-center transform hover:scale-105 transition-transform flex flex-col items-center gap-4`}
               >
-                <div className="text-5xl font-bold mb-2">{stat.number}</div>
+                <div className="opacity-80">{iconMap[stat.icon]}</div>
                 <div className="text-lg font-medium">{stat.label}</div>
               </div>
             ))}
@@ -174,7 +180,9 @@ export default function Home() {
       <section className="bg-gray-50 py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-4 mb-16">
-            <h2 className="text-4xl font-bold text-gray-900">Program-Program Unggulan</h2>
+            <Link href="/program" className="group">
+              <h2 className="text-4xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">Program-Program Unggulan →</h2>
+            </Link>
             <p className="text-xl text-gray-600">Inisiatif nyata untuk masa depan yang lebih hijau dan berkelanjutan</p>
           </div>
 
@@ -211,7 +219,9 @@ export default function Home() {
             {/* Left Column: Articles */}
             <div>
               <div className="space-y-4 mb-12">
-                <h2 className="text-4xl font-bold text-gray-900">Artikel & Berita Terbaru</h2>
+                <Link href="/berita" className="group">
+                  <h2 className="text-4xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">Artikel & Berita Terbaru →</h2>
+                </Link>
                 <p className="text-xl text-gray-600">Tetap update dengan perkembangan lingkungan</p>
               </div>
 
@@ -247,7 +257,9 @@ export default function Home() {
             {/* Right Column: Gallery */}
             <div>
               <div className="space-y-4 mb-12">
-                <h2 className="text-4xl font-bold text-gray-900">Galeri Foto</h2>
+                <Link href="/galeri" className="group">
+                  <h2 className="text-4xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">Galeri Foto →</h2>
+                </Link>
                 <p className="text-xl text-gray-600">Dokumentasi aksi nyata kami di lapangan</p>
               </div>
 
