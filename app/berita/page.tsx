@@ -16,7 +16,7 @@ const articles = [
     excerpt: 'Indonesia memiliki potensi besar dalam pengembangan energi terbarukan. Artikel ini mengeksplorasi peluang dan tantangan implementasi energi surya dan angin di kepulauan Indonesia.',
     category: 'Energi',
     date: '15 April 2024',
-    image: 'https://images.unsplash.com/photo-1509391366360-12001c361405?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80',
   },
   {
     id: 2,

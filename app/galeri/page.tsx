@@ -8,7 +8,7 @@ const galleryItems = [
   { id: 1, title: 'Penanaman Pohon di Jawa Timur', category: 'Konservasi', year: '2024', image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80' },
   { id: 2, title: 'Workshop Pertanian Hijau', category: 'Pendidikan', year: '2024', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80' },
   { id: 3, title: 'Restorasi Terumbu Karang', category: 'Konservasi Laut', year: '2024', image: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=800&q=80' },
-  { id: 4, title: 'Instalasi Panel Surya Desa', category: 'Energi', year: '2023', image: 'https://images.unsplash.com/photo-1509391366360-12001c361405?w=800&q=80' },
+  { id: 4, title: 'Instalasi Panel Surya Desa', category: 'Energi', year: '2023', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80' },
   { id: 5, title: 'Edukasi Lingkungan di Sekolah', category: 'Pendidikan', year: '2023', image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80' },
   { id: 6, title: 'Program Daur Ulang Komunitas', category: 'Ekonomi Sirkular', year: '2023', image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&q=80' },
   { id: 7, title: 'Survei Ekosistem Mangrove', category: 'Riset', year: '2022', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80' },

@@ -10,7 +10,7 @@ const articles = [
     excerpt: 'Indonesia memiliki potensi besar dalam pengembangan energi terbarukan. Artikel ini mengeksplorasi peluang dan tantangan implementasi energi surya dan angin di kepulauan Indonesia.',
     category: 'Energi',
     date: '15 April 2024',
-    image: 'https://images.unsplash.com/photo-1509391366360-12001c361405?w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=1200&q=80',
     content: 'Indonesia, sebagai negara kepulauan tropis, memiliki kelimpahan sumber daya alam yang tak ternilai, termasuk potensi energi terbarukan yang sangat besar. Mulai dari tenaga surya yang menyinari sepanjang tahun, angin kencang di pesisir, hingga potensi panas bumi (geothermal) yang merupakan salah satu yang terbesar di dunia. Namun, transisi menuju energi bersih bukan tanpa tantangan.\n\nDalam beberapa tahun terakhir, pemerintah bersama berbagai lembaga non-profit seperti Yayasan Sahabat Nusantara telah menginisiasi pemasangan panel surya di daerah-daerah terpencil yang belum terjangkau jaringan listrik nasional (off-grid). Inisiatif ini tidak hanya memberikan penerangan, tetapi juga membuka akses pendidikan dan ekonomi bagi masyarakat pedesaan.\n\nNamun, tantangan infrastruktur, tingginya biaya investasi awal, dan kebutuhan akan regulasi yang lebih mendukung masih menjadi hambatan utama. Oleh karena itu, kolaborasi antara pemerintah, sektor swasta, dan masyarakat sangat krusial untuk memastikan Indonesia bisa mencapai target emisi nol bersih pada tahun 2060.',
   },
   {
