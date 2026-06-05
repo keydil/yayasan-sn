@@ -194,33 +194,25 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {programs.map((program, idx) => (
-              <Link key={idx} href={`/program/${program.slug}`} className="group block h-full">
-                <div className="bg-white rounded-xl shadow-md group-hover:shadow-xl group-hover:-translate-y-1 transition-all overflow-hidden h-full">
-                  <div className="p-8 h-full flex flex-col">
-                    <div className="text-5xl mb-4">{program.icon}</div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">{program.title}</h3>
-                    <p className="text-gray-600 mb-4 flex-grow">{program.description}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="inline-block bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium">
-                        {program.impact}
-                      </div>
-                      <span className="text-emerald-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                        Detail <ArrowRight className="w-4 h-4" />
-                      </span>
+              <Link key={idx} href={`/program/${program.slug}`} className="group block h-full bg-white rounded-xl shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden">
+                <div className="p-8 h-full flex flex-col">
+                  <div className="text-5xl mb-4">{program.icon}</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">{program.title}</h3>
+                  <p className="text-gray-600 mb-4 flex-grow">{program.description}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="inline-block bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium">
+                      {program.impact}
                     </div>
+                    <span className="text-emerald-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                      Detail <ArrowRight className="w-4 h-4" />
+                    </span>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <Link href="/program">
-              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 text-lg">
-                Lihat Semua Program
-              </Button>
-            </Link>
-          </div>
+
         </div>
       </section>
 
@@ -243,36 +235,28 @@ export default function Home() {
 
               <div className="space-y-6">
                 {articles.slice(0, 3).map((article) => (
-                  <Link key={article.id} href={`/berita/${article.id}`} className="group block">
-                    <article className="bg-white rounded-xl shadow-sm border border-gray-100 group-hover:shadow-lg group-hover:-translate-y-1 transition-all overflow-hidden flex flex-col sm:flex-row">
-                      <div className="sm:w-48 h-48 sm:h-auto bg-gradient-to-br from-emerald-400 to-emerald-600 shrink-0 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+                  <Link key={article.id} href={`/berita/${article.id}`} className="group block bg-white rounded-xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden flex flex-col sm:flex-row">
+                    <div className="sm:w-48 h-48 sm:h-auto bg-gradient-to-br from-emerald-400 to-emerald-600 shrink-0 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+                          {article.category}
+                        </span>
+                        <span className="text-xs text-gray-500">{article.date}</span>
                       </div>
-                      <div className="p-6 flex flex-col flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
-                            {article.category}
-                          </span>
-                          <span className="text-xs text-gray-500">{article.date}</span>
-                        </div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">{article.title}</h3>
-                        <p className="text-sm text-gray-600 line-clamp-2 mb-4 flex-grow">{article.excerpt}</p>
-                        <div className="text-emerald-600 text-sm font-semibold flex items-center gap-1 group-hover:text-emerald-700 mt-auto">
-                          Baca Selengkapnya <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">{article.title}</h3>
+                      <p className="text-sm text-gray-600 line-clamp-2 mb-4 flex-grow">{article.excerpt}</p>
+                      <div className="text-emerald-600 text-sm font-semibold flex items-center gap-1 group-hover:text-emerald-700 mt-auto">
+                        Baca Selengkapnya <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
-                    </article>
+                    </div>
                   </Link>
                 ))}
               </div>
 
-              <div className="mt-8">
-                <Link href="/berita">
-                  <Button variant="outline" className="px-8 py-3 border-emerald-600 text-emerald-600">
-                    Lihat Semua Berita
-                  </Button>
-                </Link>
-              </div>
+
             </div>
 
             {/* Right Column: Gallery */}
