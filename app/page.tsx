@@ -324,9 +324,9 @@ export default function Home() {
             <div>
               <h4 className="text-white font-bold mb-4">Legalitas</h4>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/tentang" className="hover:text-white">Tim Kami</Link></li>
-                <li><Link href="/tentang" className="hover:text-white">Volunteer</Link></li>
-                <li><Link href="/berita" className="hover:text-white">Blog</Link></li>
+                <li><span className="hover:text-white cursor-default">SK Kemenkumham</span></li>
+                <li><span className="hover:text-white cursor-default">NPWP Yayasan</span></li>
+                <li><span className="hover:text-white cursor-default">Akta Pendirian</span></li>
               </ul>
             </div>
             <div>
