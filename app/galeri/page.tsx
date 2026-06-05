@@ -5,15 +5,15 @@ import { useState } from 'react';
 import { X, ZoomIn } from 'lucide-react';
 
 const galleryItems = [
-  { id: 1, title: 'Penanaman Pohon di Jawa Timur', category: 'Konservasi', year: '2024' },
-  { id: 2, title: 'Workshop Pertanian Hijau', category: 'Pendidikan', year: '2024' },
-  { id: 3, title: 'Restorasi Terumbu Karang', category: 'Konservasi Laut', year: '2024' },
-  { id: 4, title: 'Instalasi Panel Surya Desa', category: 'Energi', year: '2023' },
-  { id: 5, title: 'Edukasi Lingkungan di Sekolah', category: 'Pendidikan', year: '2023' },
-  { id: 6, title: 'Program Daur Ulang Komunitas', category: 'Ekonomi Sirkular', year: '2023' },
-  { id: 7, title: 'Survei Ekosistem Mangrove', category: 'Riset', year: '2022' },
-  { id: 8, title: 'Festival Lingkungan 2022', category: 'Event', year: '2022' },
-  { id: 9, title: 'Pembersihan Pantai Bali', category: 'Aksi Nyata', year: '2022' },
+  { id: 1, title: 'Penanaman Pohon di Jawa Timur', category: 'Konservasi', year: '2024', image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80' },
+  { id: 2, title: 'Workshop Pertanian Hijau', category: 'Pendidikan', year: '2024', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80' },
+  { id: 3, title: 'Restorasi Terumbu Karang', category: 'Konservasi Laut', year: '2024', image: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=800&q=80' },
+  { id: 4, title: 'Instalasi Panel Surya Desa', category: 'Energi', year: '2023', image: 'https://images.unsplash.com/photo-1509391366360-12001c361405?w=800&q=80' },
+  { id: 5, title: 'Edukasi Lingkungan di Sekolah', category: 'Pendidikan', year: '2023', image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80' },
+  { id: 6, title: 'Program Daur Ulang Komunitas', category: 'Ekonomi Sirkular', year: '2023', image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&q=80' },
+  { id: 7, title: 'Survei Ekosistem Mangrove', category: 'Riset', year: '2022', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80' },
+  { id: 8, title: 'Festival Lingkungan 2022', category: 'Event', year: '2022', image: 'https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=800&q=80' },
+  { id: 9, title: 'Pembersihan Pantai Bali', category: 'Aksi Nyata', year: '2022', image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80' },
 ];
 
 const years = ['Semua', '2024', '2023', '2022'];
@@ -72,10 +72,7 @@ export default function GaleriPage() {
                 onClick={() => setSelectedItem(item)}
               >
                 <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
-                    <svg className="w-16 h-16 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    <span className="text-sm">Foto Kegiatan</span>
-                  </div>
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-emerald-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
                       <ZoomIn className="w-8 h-8 text-white" />
@@ -132,11 +129,8 @@ export default function GaleriPage() {
             </div>
 
             {/* Image Area */}
-            <div className="aspect-video bg-gray-200 relative">
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
-                <svg className="w-24 h-24 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                <span className="text-base">Foto Kegiatan (Placeholder)</span>
-              </div>
+            <div className="aspect-video bg-gray-200 relative overflow-hidden">
+              <img src={selectedItem.image} alt={selectedItem.title} className="w-full h-full object-cover" />
             </div>
 
             {/* Caption */}

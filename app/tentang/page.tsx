@@ -34,21 +34,25 @@ const team = [
     name: 'Dr. Bambang Sutrisno',
     role: 'Ketua Yayasan',
     bio: 'Pakar lingkungan dengan 20 tahun pengalaman dalam konservasi alam.',
+    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&q=80'
   },
   {
     name: 'Siti Nurhaliza',
     role: 'Direktur Operasional',
     bio: 'Spesialis manajemen proyek keberlanjutan dan pemberdayaan masyarakat.',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&q=80'
   },
   {
     name: 'Ahmad Wijaya',
     role: 'Kepala Divisi Pendidikan',
     bio: 'Ahli pendidikan lingkungan dengan fokus pada literasi hijau.',
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&q=80'
   },
   {
     name: 'Ratna Dewi',
     role: 'Kepala Keuangan',
     bio: 'Profesional keuangan berpengalaman dalam manajemen dana sosial.',
+    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&q=80'
   },
 ];
 
@@ -132,8 +136,8 @@ export default function TentangPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {team.map((member, index) => (
               <Card key={index} className="bg-gradient-to-br from-emerald-50 to-white border-emerald-100 p-6 sm:p-8 text-center">
-                <div className="w-20 h-20 mx-auto bg-emerald-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
-                  {member.name.charAt(0)}
+                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-5 border-4 border-emerald-100">
+                  <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-1">
                   {member.name}

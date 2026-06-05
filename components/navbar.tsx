@@ -42,12 +42,17 @@ return (
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-1">
-                {navLinks.map((link) => (
-                <Link key={link.href} href={link.href}
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors">
-                {link.label}
-                </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href));
+                  return (
+                    <Link key={link.href} href={link.href}
+                        className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                          isActive ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
+                        }`}>
+                    {link.label}
+                    </Link>
+                  );
+                })}
             </div>
 
             {/* CTA and Admin */}
@@ -70,14 +75,19 @@ return (
         {/* Mobile Navigation */}
         {isOpen && (
         <div className="md:hidden pb-4 space-y-1">
-            {navLinks.map((link) => (
-            <Link key={link.href} href={link.href}
-                className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors"
-                onClick={()=> setIsOpen(false)}
-            >
-            {link.label}
-            </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href));
+              return (
+                <Link key={link.href} href={link.href}
+                    className={`block px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                      isActive ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
+                    }`}
+                    onClick={()=> setIsOpen(false)}
+                >
+                {link.label}
+                </Link>
+              );
+            })}
         </div>
         )}
     </div>

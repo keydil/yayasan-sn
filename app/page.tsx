@@ -67,45 +67,51 @@ const programs = [
 const articles = [
   {
     id: 1,
-    title: 'Dampak Perubahan Iklim terhadap Keanekaragaman Hayati Indonesia',
-    excerpt: 'Penelitian terbaru menunjukkan peningkatan suhu global mempengaruhi habitat alami spesies endemik Indonesia.',
-    date: '15 Maret 2024',
-    category: 'Riset',
+    title: 'Teknologi Energi Terbarukan di Indonesia: Peluang dan Tantangan',
+    excerpt: 'Indonesia memiliki potensi besar dalam pengembangan energi terbarukan. Artikel ini mengeksplorasi peluang dan tantangan implementasi energi surya dan angin di kepulauan Indonesia.',
+    date: '15 April 2024',
+    category: 'Energi',
+    image: 'https://images.unsplash.com/photo-1509391366360-12001c361405?w=800&q=80',
   },
   {
     id: 2,
-    title: 'Kisah Sukses: Masyarakat Lokal Menjaga Terumbu Karang',
-    excerpt: 'Nelayan di Sulawesi berhasil merestorasi terumbu karang dengan teknik konservasi inovatif.',
-    date: '10 Maret 2024',
-    category: 'Cerita Sukses',
+    title: 'Konservasi Laut: Melindungi Ekosistem Terumbu Karang',
+    excerpt: 'Terumbu karang adalah ekosistem yang sangat penting namun terus terancam. Kami melakukan upaya konservasi laut yang inovatif untuk menjaga kelestarian terumbu karang Indonesia.',
+    date: '12 April 2024',
+    category: 'Konservasi',
+    image: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=800&q=80',
   },
   {
     id: 3,
-    title: 'Panduan Praktis: Memulai Gaya Hidup Ramah Lingkungan',
-    excerpt: 'Tips sederhana untuk mengurangi jejak karbon Anda dalam kehidupan sehari-hari.',
-    date: '5 Maret 2024',
-    category: 'Panduan',
+    title: 'Pertanian Berkelanjutan: Masa Depan Petani Indonesia',
+    excerpt: 'Pertanian berkelanjutan adalah kunci untuk meningkatkan kesejahteraan petani dan menjaga kelestarian lingkungan. Kami mendorong praktik pertanian yang ramah lingkungan dan menguntungkan ekonomi lokal.',
+    date: '10 April 2024',
+    category: 'Pertanian',
+    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80',
   },
   {
     id: 4,
-    title: 'Webinar Gratis: Solusi Energi Terbarukan untuk UMKM',
-    excerpt: 'Bergabunglah dengan para ahli untuk mempelajari implementasi energi terbarukan di bisnis Anda.',
-    date: '1 Maret 2024',
-    category: 'Event',
+    title: 'Pendidikan Lingkungan: Membangun Generasi Sadar Lingkungan',
+    excerpt: 'Pendidikan lingkungan memainkan peran krusial dalam membentuk kesadaran generasi muda tentang pentingnya pelestarian lingkungan.',
+    date: '8 April 2024',
+    category: 'Pendidikan',
+    image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80',
   },
   {
     id: 5,
-    title: 'Update Terbaru: Perkembangan Proyek Reboisasi Lahan Kritis',
-    excerpt: 'Tim kami telah menanam 10,000 pohon di lahan kritis Jawa Timur dalam kuartal pertama 2024.',
-    date: '25 Februari 2024',
-    category: 'Update Proyek',
+    title: 'Ekonomi Sirkular: Mengubah Limbah Menjadi Aset',
+    excerpt: 'Ekonomi sirkular adalah model ekonomi yang meminimalkan limbah dan memaksimalkan penggunaan sumber daya secara efisien.',
+    date: '5 April 2024',
+    category: 'Ekonomi',
+    image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&q=80',
   },
   {
     id: 6,
-    title: 'Bergabunglah dengan Kami: Lowongan Volunteer Pendamping Komunitas',
-    excerpt: 'Kami membuka peluang bagi individu bersemangat untuk mendampingi program-program komunitas kami.',
-    date: '20 Februari 2024',
-    category: 'Volunteer',
+    title: 'Dampak Perubahan Iklim terhadap Biodiversitas Indonesia',
+    excerpt: 'Perubahan iklim global memiliki dampak signifikan terhadap biodiversitas Indonesia. Artikel ini membahas strategi adaptasi dan mitigasi yang diperlukan.',
+    date: '2 April 2024',
+    category: 'Iklim',
+    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
   },
 ];
 
@@ -236,7 +242,8 @@ export default function Home() {
               <div className="space-y-6">
                 {articles.slice(0, 3).map((article) => (
                   <Link key={article.id} href={`/berita/${article.id}`} className="group block bg-white rounded-xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden flex flex-col sm:flex-row">
-                    <div className="sm:w-48 h-48 sm:h-auto bg-gradient-to-br from-emerald-400 to-emerald-600 shrink-0 relative overflow-hidden">
+                    <div className="sm:w-48 h-48 sm:h-auto bg-gray-200 shrink-0 relative overflow-hidden">
+                      <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
                     </div>
                     <div className="p-6 flex flex-col flex-1">
