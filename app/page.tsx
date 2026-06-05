@@ -108,19 +108,16 @@ const testimonials = [
     name: 'Ibu Siti Nurhaliza',
     role: 'Kepala Desa, Jawa Barat',
     quote: 'Program Yayasan Sahabat Nusantara telah mengubah cara kami menjaga lingkungan. Kualitas air di desa kami meningkat signifikan.',
-    avatar: '👩',
   },
   {
     name: 'Pak Ahmad Dahlan',
     role: 'Pemilik UMKM Energi Terbarukan',
     quote: 'Dukungan dan pelatihan dari tim mereka membuat bisnis saya lebih berkelanjutan dan menguntungkan.',
-    avatar: '👨',
   },
   {
     name: 'Maya Kusuma',
     role: 'Pelajar, Jakarta',
     quote: 'Workshop mereka menginspirasi saya untuk memulai gerakan daur ulang di sekolah. Kini kami mengurangi sampah 60%!',
-    avatar: '👧',
   },
 ];
 
@@ -284,13 +281,15 @@ export default function Home() {
       {/* Testimonials */}
       <section className="bg-emerald-50 py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-gray-900 text-center mb-16">Kata-Kata Mereka</h2>
+          <h2 className="text-4xl font-bold text-gray-900 text-center mb-16">Testimoni</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, idx) => (
               <div key={idx} className="bg-white p-8 rounded-xl shadow-md">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="text-5xl">{testimonial.avatar}</div>
+                  <div className="w-14 h-14 bg-emerald-600 rounded-full flex items-center justify-center text-white text-xl font-bold shrink-0">
+                    {testimonial.name.charAt(0)}
+                  </div>
                   <div>
                     <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
                     <p className="text-sm text-gray-600">{testimonial.role}</p>
@@ -323,7 +322,7 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-bold mb-4">Komunitas</h4>
+              <h4 className="text-white font-bold mb-4">Legalitas</h4>
               <ul className="space-y-2 text-sm">
                 <li><Link href="/tentang" className="hover:text-white">Tim Kami</Link></li>
                 <li><Link href="/tentang" className="hover:text-white">Volunteer</Link></li>
