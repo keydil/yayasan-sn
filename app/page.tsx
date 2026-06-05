@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Briefcase, CalendarCheck, Handshake } from 'lucide-react';
+import { Briefcase, CalendarCheck, Handshake, ArrowRight } from 'lucide-react';
 
 export const metadata = {
   title: 'Beranda | Yayasan Sahabat Nusantara',
@@ -176,11 +176,14 @@ export default function Home() {
       {/* Featured Programs */}
       <section className="bg-gray-50 py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-4 mb-16">
-            <Link href="/program" className="group">
-              <h2 className="text-4xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">Program-Program Unggulan →</h2>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-16">
+            <div className="space-y-4">
+              <h2 className="text-4xl font-bold text-gray-900">Program-Program Unggulan</h2>
+              <p className="text-xl text-gray-600">Inisiatif nyata untuk masa depan yang lebih hijau dan berkelanjutan</p>
+            </div>
+            <Link href="/program" className="group flex items-center gap-2 text-emerald-600 font-semibold hover:text-emerald-700 transition-colors whitespace-nowrap">
+              Jelajahi Program <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <p className="text-xl text-gray-600">Inisiatif nyata untuk masa depan yang lebih hijau dan berkelanjutan</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -215,11 +218,14 @@ export default function Home() {
             
             {/* Left Column: Articles */}
             <div>
-              <div className="space-y-4 mb-12">
-                <Link href="/berita" className="group">
-                  <h2 className="text-4xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">Artikel & Berita Terbaru →</h2>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-12">
+                <div className="space-y-2">
+                  <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Artikel & Berita</h2>
+                  <p className="text-lg lg:text-xl text-gray-600">Tetap update dengan perkembangan lingkungan</p>
+                </div>
+                <Link href="/berita" className="group flex items-center gap-2 text-emerald-600 font-semibold hover:text-emerald-700 transition-colors whitespace-nowrap">
+                  Lihat Semua <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <p className="text-xl text-gray-600">Tetap update dengan perkembangan lingkungan</p>
               </div>
 
               <div className="space-y-6">
@@ -253,11 +259,14 @@ export default function Home() {
 
             {/* Right Column: Gallery */}
             <div>
-              <div className="space-y-4 mb-12">
-                <Link href="/galeri" className="group">
-                  <h2 className="text-4xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">Galeri Foto →</h2>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-12">
+                <div className="space-y-2">
+                  <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Galeri Foto</h2>
+                  <p className="text-lg lg:text-xl text-gray-600">Dokumentasi aksi nyata kami di lapangan</p>
+                </div>
+                <Link href="/galeri" className="group flex items-center gap-2 text-emerald-600 font-semibold hover:text-emerald-700 transition-colors whitespace-nowrap">
+                  Lihat Galeri <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <p className="text-xl text-gray-600">Dokumentasi aksi nyata kami di lapangan</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
