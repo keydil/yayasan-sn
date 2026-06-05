@@ -22,36 +22,42 @@ const iconMap: Record<string, React.ReactNode> = {
 const programs = [
   {
     title: 'Konservasi Hutan',
+    slug: 'konservasi-hutan',
     description: 'Program penanaman pohon dan pelestarian ekosistem hutan di berbagai wilayah Indonesia.',
     icon: '🌲',
     impact: '50K+ pohon ditanam',
   },
   {
     title: 'Pendidikan Lingkungan',
+    slug: 'pendidikan-lingkungan',
     description: 'Workshop dan pelatihan untuk meningkatkan kesadaran lingkungan di sekolah dan komunitas.',
     icon: '📚',
     impact: '10K+ peserta',
   },
   {
     title: 'Energi Terbarukan',
+    slug: 'energi-terbarukan',
     description: 'Inisiatif transisi energi menuju sumber energi bersih dan berkelanjutan.',
     icon: '⚡',
     impact: '25 lokasi',
   },
   {
     title: 'Pengelolaan Sampah',
+    slug: 'ekonomi-sirkular',
     description: 'Program daur ulang dan pengurangan sampah untuk komunitas urban dan pedesaan.',
     icon: '♻️',
     impact: '500+ ton',
   },
   {
     title: 'Air Bersih',
+    slug: 'konservasi-hutan', // Note: Ideally we'd have a dedicated slug for this, using a fallback for now.
     description: 'Akses air bersih dan sanitasi untuk desa-desa terpencil di seluruh Indonesia.',
     icon: '💧',
     impact: '30 desa',
   },
   {
     title: 'Advokasi Kebijakan',
+    slug: 'pendidikan-lingkungan', // Note: Fallback slug
     description: 'Kampanye advokasi untuk perubahan kebijakan lingkungan yang lebih progresif.',
     icon: '🏛️',
     impact: '15 inisiatif',
@@ -188,16 +194,23 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {programs.map((program, idx) => (
-              <div key={idx} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden">
-                <div className="p-8">
-                  <div className="text-5xl mb-4">{program.icon}</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{program.title}</h3>
-                  <p className="text-gray-600 mb-4">{program.description}</p>
-                  <div className="inline-block bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium">
-                    {program.impact}
+              <Link key={idx} href={`/program/${program.slug}`} className="group block h-full">
+                <div className="bg-white rounded-xl shadow-md group-hover:shadow-xl group-hover:-translate-y-1 transition-all overflow-hidden h-full">
+                  <div className="p-8 h-full flex flex-col">
+                    <div className="text-5xl mb-4">{program.icon}</div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">{program.title}</h3>
+                    <p className="text-gray-600 mb-4 flex-grow">{program.description}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="inline-block bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium">
+                        {program.impact}
+                      </div>
+                      <span className="text-emerald-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                        Detail <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -230,21 +243,26 @@ export default function Home() {
 
               <div className="space-y-6">
                 {articles.slice(0, 3).map((article) => (
-                  <article key={article.id} className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden flex flex-col sm:flex-row">
-                    <div className="sm:w-48 h-48 sm:h-auto bg-gradient-to-br from-emerald-400 to-emerald-600 shrink-0"></div>
-                    <div className="p-6 flex flex-col flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
-                          {article.category}
-                        </span>
-                        <span className="text-xs text-gray-500">{article.date}</span>
+                  <Link key={article.id} href={`/berita/${article.id}`} className="group block">
+                    <article className="bg-white rounded-xl shadow-sm border border-gray-100 group-hover:shadow-lg group-hover:-translate-y-1 transition-all overflow-hidden flex flex-col sm:flex-row">
+                      <div className="sm:w-48 h-48 sm:h-auto bg-gradient-to-br from-emerald-400 to-emerald-600 shrink-0 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">{article.title}</h3>
-                      <Link href={`/berita/${article.id}`} className="text-emerald-600 text-sm font-semibold hover:text-emerald-700 mt-auto">
-                        Baca Selengkapnya →
-                      </Link>
-                    </div>
-                  </article>
+                      <div className="p-6 flex flex-col flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+                            {article.category}
+                          </span>
+                          <span className="text-xs text-gray-500">{article.date}</span>
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-2">{article.title}</h3>
+                        <p className="text-sm text-gray-600 line-clamp-2 mb-4 flex-grow">{article.excerpt}</p>
+                        <div className="text-emerald-600 text-sm font-semibold flex items-center gap-1 group-hover:text-emerald-700 mt-auto">
+                          Baca Selengkapnya <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    </article>
+                  </Link>
                 ))}
               </div>
 
