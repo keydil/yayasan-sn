@@ -224,17 +224,8 @@ export default function ProgramPage() {
         </div>
       </section>
 
-      {/* Join Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-emerald-600 to-emerald-700">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-balance">
-            Ingin Turut Berkontribusi?
-          </h2>
-          <p className="text-lg text-emerald-50 text-balance">
-            Bergabunglah dengan kami dalam misi pelestarian lingkungan. Setiap kontribusi memiliki dampak nyata.
-          </p>
-        </div>
-      </section>
+      {/* Aesthetic Green Section */}
+      <section className="bg-emerald-600 h-24 lg:h-32 w-full"></section>
     </main>
   );
 }
