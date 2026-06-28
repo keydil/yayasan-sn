@@ -21,10 +21,11 @@ export const metadata: Metadata = {
     siteName: 'Yayasan Sahabat Nusantara',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://www.sahabatnusantara.id/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Yayasan Sahabat Nusantara — Aksi Nyata Untuk Bumi Indonesia',
+        type: 'image/jpeg',
       },
     ],
     locale: 'id_ID',
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Yayasan Sahabat Nusantara',
     description: 'Konservasi Alam · Pendidikan Lingkungan · Pemberdayaan Masyarakat — Aksi nyata untuk bumi Indonesia.',
-    images: ['/og-image.png'],
+    images: ['https://www.sahabatnusantara.id/og-image.jpg'],
   },
   robots: {
     index: true,
