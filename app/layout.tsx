@@ -9,29 +9,41 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Yayasan Sahabat Nusantara | Organisasi Lingkungan Indonesia',
-  description: 'Yayasan Sahabat Nusantara adalah organisasi nirlaba yang berdedikasi untuk pelestarian lingkungan dan keberlanjutan di Indonesia.',
-  metadataBase: new URL('https://yayasan-sn.vercel.app'),
+  title: 'Yayasan Sahabat Nusantara | Pelestarian Lingkungan Indonesia',
+  description: 'Organisasi nirlaba yang berdedikasi untuk konservasi alam, pendidikan lingkungan, dan pemberdayaan masyarakat demi masa depan Indonesia yang hijau dan berkelanjutan.',
+  metadataBase: new URL('https://www.sahabatnusantara.id'),
+  keywords: ['yayasan', 'lingkungan', 'konservasi', 'Indonesia', 'pelestarian', 'sahabat nusantara', 'keberlanjutan', 'edukasi lingkungan'],
+  authors: [{ name: 'Yayasan Sahabat Nusantara' }],
   openGraph: {
-    title: 'Yayasan Sahabat Nusantara | Aksi Nyata Untuk Bumi',
-    description: 'Sistem Informasi & Edukasi Pelestarian Lingkungan. Mari bergabung melakukan aksi nyata demi masa depan Indonesia.',
-    url: 'https://yayasan-sn.vercel.app',
+    title: 'Yayasan Sahabat Nusantara',
+    description: 'Konservasi Alam · Pendidikan Lingkungan · Pemberdayaan Masyarakat — Aksi nyata untuk masa depan Indonesia yang lebih hijau dan berkelanjutan.',
+    url: 'https://www.sahabatnusantara.id',
     siteName: 'Yayasan Sahabat Nusantara',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Thumbnail Yayasan Sahabat Nusantara',
+        alt: 'Yayasan Sahabat Nusantara — Aksi Nyata Untuk Bumi Indonesia',
       },
     ],
     locale: 'id_ID',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Yayasan Sahabat Nusantara',
+    description: 'Konservasi Alam · Pendidikan Lingkungan · Pemberdayaan Masyarakat — Aksi nyata untuk bumi Indonesia.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   generator: 'nextjs.app',
   icons: {
     icon: '/icon.png',
-    apple: '/icon.png', // Biar di iPhone juga muncul icon yang sama
+    apple: '/icon.png',
   },
 }
 
