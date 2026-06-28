@@ -10,13 +10,13 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: 'Yayasan Sahabat Nusantara | Pelestarian Lingkungan Indonesia',
-  description: 'Organisasi nirlaba yang berdedikasi untuk konservasi alam, pendidikan lingkungan, dan pemberdayaan masyarakat demi masa depan Indonesia yang hijau dan berkelanjutan.',
+  description: 'Yayasan Sahabat Nusantara hadir sebagai wadah aksi nyata untuk pelestarian lingkungan. Bersama kita jaga kelestarian alam dan berdayakan masyarakat Nusantara.',
   metadataBase: new URL('https://www.sahabatnusantara.id'),
   keywords: ['yayasan', 'lingkungan', 'konservasi', 'Indonesia', 'pelestarian', 'sahabat nusantara', 'keberlanjutan', 'edukasi lingkungan'],
   authors: [{ name: 'Yayasan Sahabat Nusantara' }],
   openGraph: {
     title: 'Yayasan Sahabat Nusantara',
-    description: 'Konservasi Alam · Pendidikan Lingkungan · Pemberdayaan Masyarakat — Aksi nyata untuk masa depan Indonesia yang lebih hijau dan berkelanjutan.',
+    description: 'Wadah aksi nyata untuk pelestarian lingkungan. Mari bergabung menjaga kelestarian alam dan memberdayakan masyarakat Nusantara.',
     url: 'https://www.sahabatnusantara.id',
     siteName: 'Yayasan Sahabat Nusantara',
     images: [
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Yayasan Sahabat Nusantara',
-    description: 'Konservasi Alam · Pendidikan Lingkungan · Pemberdayaan Masyarakat — Aksi nyata untuk bumi Indonesia.',
+    description: 'Wadah aksi nyata untuk pelestarian lingkungan. Mari bergabung menjaga kelestarian alam Nusantara.',
     images: ['https://www.sahabatnusantara.id/og-image.jpg'],
   },
   robots: {
