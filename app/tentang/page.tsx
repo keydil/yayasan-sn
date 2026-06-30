@@ -80,17 +80,18 @@ export default function TentangPage() {
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12">
             <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-200 p-8 sm:p-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Misi Kami</h2>
-              <p className="text-gray-700 leading-relaxed text-balance">
-                Melindungi dan mempulihkan ekosistem alami Indonesia melalui penelitian, advokasi kebijakan, pendidikan lingkungan,
-                dan pemberdayaan masyarakat lokal untuk menciptakan masa depan yang berkelanjutan dan sejahtera bagi semua.
-              </p>
+              <ol className="text-gray-700 leading-relaxed list-decimal list-inside space-y-3">
+                <li>Memperkuat kapasitas masyarakat melalui pendidikan, pelatihan, dan pengorganisasian komunitas.</li>
+                <li>Mendorong perlindungan lingkungan hidup dan pengelolaan sumber daya alam berkelanjutan.</li>
+                <li>Mengembangkan kesiapsiagaan, respon darurat, dan pemulihan pascabencana berbasis komunitas.</li>
+                <li>Membangun kemitraan strategis dengan donor, pemerintah, akademisi, dan masyarakat sipil.</li>
+              </ol>
             </Card>
 
             <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-200 p-8 sm:p-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Visi Kami</h2>
               <p className="text-gray-700 leading-relaxed text-balance">
-                Indonesia yang hijau, berkelanjutan, dan sejahtera dengan ekosistem alami yang terjaga, masyarakat yang sadar
-                lingkungan, dan ekonomi yang ramah lingkungan untuk generasi mendatang.
+                Terwujudnya masyarakat yang adil, berdaya, berpengetahuan, dan tangguh secara sosial dan ekologis.
               </p>
             </Card>
           </div>
@@ -170,7 +171,7 @@ export default function TentangPage() {
               <p className="text-gray-500 font-medium">Bagan Struktur Organisasi (Format JPG)</p>
               <p className="text-gray-400 text-sm mt-2">Placeholder gambar akan diganti dengan desain struktur aktual</p>
             </div>
-            
+
             <div className="mt-8 text-left text-gray-700 leading-relaxed max-w-3xl mx-auto">
               <p>
                 Struktur organisasi kami dirancang untuk memastikan transparansi, efisiensi, dan kolaborasi optimal di setiap tingkat operasional. Mulai dari dewan pembina hingga divisi-divisi eksekusi program di lapangan.
