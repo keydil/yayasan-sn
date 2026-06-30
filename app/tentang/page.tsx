@@ -78,21 +78,32 @@ export default function TentangPage() {
       <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12">
-            <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-200 p-8 sm:p-10">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Misi Kami</h2>
-              <ol className="text-gray-700 leading-relaxed list-decimal list-inside space-y-3">
-                <li>Memperkuat kapasitas masyarakat melalui pendidikan, pelatihan, dan pengorganisasian komunitas.</li>
-                <li>Mendorong perlindungan lingkungan hidup dan pengelolaan sumber daya alam berkelanjutan.</li>
-                <li>Mengembangkan kesiapsiagaan, respon darurat, dan pemulihan pascabencana berbasis komunitas.</li>
-                <li>Membangun kemitraan strategis dengan donor, pemerintah, akademisi, dan masyarakat sipil.</li>
-              </ol>
-            </Card>
-
+            {/* Kolom Pertama: Visi Kami */}
             <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-200 p-8 sm:p-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Visi Kami</h2>
               <p className="text-gray-700 leading-relaxed text-balance">
                 Terwujudnya masyarakat yang adil, berdaya, berpengetahuan, dan tangguh secara sosial dan ekologis.
               </p>
+            </Card>
+
+            {/* Kolom Kedua: Misi Kami (Teks List Rapi) */}
+            <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-200 p-8 sm:p-10">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Misi Kami</h2>
+              {/* Penyesuaian List: Hapus list-inside, tambahkan pl-5 agar nomor diluar */}
+              <ol className="text-gray-700 leading-relaxed list-decimal space-y-3 pl-5">
+                <li>
+                  Memperkuat kapasitas masyarakat melalui pendidikan, pelatihan, dan pengorganisasian komunitas.
+                </li>
+                <li>
+                  Mendorong perlindungan lingkungan hidup dan pengelolaan sumber daya alam berkelanjutan.
+                </li>
+                <li>
+                  Mengembangkan kesiapsiagaan, respon darurat, dan pemulihan pascabencana berbasis komunitas.
+                </li>
+                <li>
+                  Membangun kemitraan strategis dengan donor, pemerintah, akademisi, dan masyarakat sipil.
+                </li>
+              </ol>
             </Card>
           </div>
         </div>
