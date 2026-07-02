@@ -4,13 +4,13 @@ import { Briefcase, CalendarCheck, Handshake, ArrowRight } from 'lucide-react';
 
 export const metadata = {
   title: 'Beranda | Yayasan Sahabat Nusantara',
-  description: 'Organisasi lingkungan terdepan di Indonesia untuk pelestarian alam dan keberlanjutan.',
+  description: 'Yayasan Sahabat Nusantara — organisasi masyarakat sipil yang berkomitmen untuk keadilan sosial, pendidikan, perlindungan lingkungan hidup, dan ketangguhan komunitas Indonesia.',
 };
 
 const impactStats = [
-  { label: 'Bidang Kegiatan', icon: 'briefcase', color: 'bg-emerald-50 text-emerald-700' },
-  { label: 'Kegiatan', icon: 'calendar', color: 'bg-amber-50 text-amber-700' },
-  { label: 'Afiliasi', icon: 'handshake', color: 'bg-purple-50 text-purple-700' },
+  { label: 'Bidang Program Prioritas', icon: 'briefcase', color: 'bg-emerald-50 text-emerald-700' },
+  { label: 'Program 2025–2030', icon: 'calendar', color: 'bg-amber-50 text-amber-700' },
+  { label: 'Mitra Strategis', icon: 'handshake', color: 'bg-purple-50 text-purple-700' },
 ];
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -21,46 +21,32 @@ const iconMap: Record<string, React.ReactNode> = {
 
 const programs = [
   {
-    title: 'Konservasi Hutan',
-    slug: 'konservasi-hutan',
-    description: 'Program penanaman pohon dan pelestarian ekosistem hutan di berbagai wilayah Indonesia.',
-    icon: '🌲',
-    impact: '50K+ pohon ditanam',
+    title: 'Penghijauan & Reboisasi',
+    slug: 'penghijauan',
+    description: 'Rehabilitasi lahan kritis, penanaman pohon endemik, dan monitoring pertumbuhan vegetasi secara berkala bersama komunitas lokal.',
+    icon: '🌱',
+    impact: 'Pilar 01',
   },
   {
-    title: 'Pendidikan Lingkungan',
-    slug: 'pendidikan-lingkungan',
-    description: 'Workshop dan pelatihan untuk meningkatkan kesadaran lingkungan di sekolah dan komunitas.',
+    title: 'Pendidikan & Kapasitas',
+    slug: 'pendidikan',
+    description: 'Pelatihan kader lingkungan, pengembangan modul edukasi sekolah, dan kampanye kesadaran iklim di tingkat komunitas.',
     icon: '📚',
-    impact: '10K+ peserta',
-  },
-  {
-    title: 'Energi Terbarukan',
-    slug: 'energi-terbarukan',
-    description: 'Inisiatif transisi energi menuju sumber energi bersih dan berkelanjutan.',
-    icon: '⚡',
-    impact: '25 lokasi',
+    impact: 'Pilar 02',
   },
   {
     title: 'Pengelolaan Sampah',
-    slug: 'ekonomi-sirkular',
-    description: 'Program daur ulang dan pengurangan sampah untuk komunitas urban dan pedesaan.',
+    slug: 'pengelolaan-sampah',
+    description: 'Pengembangan Bank Sampah, TPS3R komunitas, dan edukasi pemilahan sampah organik untuk sistem pengelolaan yang efektif.',
     icon: '♻️',
-    impact: '500+ ton',
+    impact: 'Pilar 03',
   },
   {
-    title: 'Air Bersih',
-    slug: 'konservasi-hutan', // Note: Ideally we'd have a dedicated slug for this, using a fallback for now.
-    description: 'Akses air bersih dan sanitasi untuk desa-desa terpencil di seluruh Indonesia.',
+    title: 'Konservasi Air',
+    slug: 'konservasi-air',
+    description: 'Pemetaan kawasan resapan, perlindungan daerah tangkapan air, dan penguatan hutan desa untuk menjaga ketersediaan air bersih.',
     icon: '💧',
-    impact: '30 desa',
-  },
-  {
-    title: 'Advokasi Kebijakan',
-    slug: 'pendidikan-lingkungan', // Note: Fallback slug
-    description: 'Kampanye advokasi untuk perubahan kebijakan lingkungan yang lebih progresif.',
-    icon: '🏛️',
-    impact: '15 inisiatif',
+    impact: 'Pilar 04',
   },
 ];
 
