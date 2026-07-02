@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-export const metadata = undefined; // handled in layout
-
 const pillars = [
   {
     id: 1,
