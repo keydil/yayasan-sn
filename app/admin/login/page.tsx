@@ -118,12 +118,6 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Quick Demo Info Box */}
-          <div className="mt-6 pt-5 border-t border-gray-100 bg-emerald-50/60 rounded-xl p-4 text-xs text-emerald-900">
-            <p className="font-bold mb-1">Kredensial Default Login:</p>
-            <p className="text-gray-600 font-mono">Email: yayasan.sn@gmail.com</p>
-            <p className="text-gray-600 font-mono">Password: admin123</p>
-          </div>
 
           <div className="mt-6 text-center">
             <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-emerald-700 transition-colors">
