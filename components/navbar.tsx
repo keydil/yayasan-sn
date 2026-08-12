@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
 import { Leaf } from 'lucide-react';
-import { DonasiModal } from '@/components/donasi-modal';
+
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +55,6 @@ export function Navbar() {
 
           {/* CTA and Admin */}
           <div className="flex items-center gap-2">
-            <DonasiModal />
 
 
             {/* Mobile Menu Button */}
