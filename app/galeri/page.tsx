@@ -1,43 +1,38 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { useState } from 'react';
-import { X, ZoomIn } from 'lucide-react';
-
-const galleryItems = [
-  { id: 1, title: 'Penanaman Pohon di Jawa Timur', category: 'Konservasi', year: '2024', image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80' },
-  { id: 2, title: 'Workshop Pertanian Hijau', category: 'Pendidikan', year: '2024', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80' },
-  { id: 3, title: 'Restorasi Terumbu Karang', category: 'Konservasi Laut', year: '2024', image: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=800&q=80' },
-  { id: 4, title: 'Instalasi Panel Surya Desa', category: 'Energi', year: '2023', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80' },
-  { id: 5, title: 'Edukasi Lingkungan di Sekolah', category: 'Pendidikan', year: '2023', image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80' },
-  { id: 6, title: 'Program Daur Ulang Komunitas', category: 'Ekonomi Sirkular', year: '2023', image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&q=80' },
-  { id: 7, title: 'Survei Ekosistem Mangrove', category: 'Riset', year: '2022', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80' },
-  { id: 8, title: 'Festival Lingkungan 2022', category: 'Event', year: '2022', image: 'https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=800&q=80' },
-  { id: 9, title: 'Pembersihan Pantai Bali', category: 'Aksi Nyata', year: '2022', image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80' },
-];
-
-const years = ['Semua', '2024', '2023', '2022'];
+import { useState, useEffect } from 'react';
+import { X, ZoomIn, Image as ImageIcon } from 'lucide-react';
+import { dataService, GalleryItem } from '@/lib/supabase';
 
 export default function GaleriPage() {
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [selectedYear, setSelectedYear] = useState('Semua');
-  const [selectedItem, setSelectedItem] = useState<typeof galleryItems[0] | null>(null);
+  const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
 
-  const filteredItems = selectedYear === 'Semua'
-    ? galleryItems
-    : galleryItems.filter(item => item.year === selectedYear);
+  useEffect(() => {
+    setGalleryItems(dataService.getGallery());
+  }, []);
+
+  const years = ['Semua', ...Array.from(new Set(galleryItems.map((item) => item.year)))];
+
+  const filteredItems =
+    selectedYear === 'Semua' ? galleryItems : galleryItems.filter((item) => item.year === selectedYear);
 
   return (
     <main className="min-h-screen bg-white">
-
       {/* Hero Section */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-white via-emerald-50 to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+            Dokumentasi Aksi
+          </span>
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 text-balance">
-            Galeri Foto
+            Galeri Foto Kegiatan
           </h1>
 
           <p className="text-lg text-gray-600 text-balance">
-            Dokumentasi visual dari aksi nyata kami di lapangan untuk pelestarian lingkungan Indonesia.
+            Dokumentasi visual dari aksi nyata kami di lapangan untuk pelestarian lingkungan dan pemberdayaan masyarakat.
           </p>
         </div>
       </section>
@@ -45,7 +40,6 @@ export default function GaleriPage() {
       {/* Gallery Grid */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
           {/* Year Filter */}
           <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
             {years.map((year) => (
@@ -68,11 +62,15 @@ export default function GaleriPage() {
             {filteredItems.map((item) => (
               <Card
                 key={item.id}
-                className="overflow-hidden border-0 bg-white group cursor-pointer hover:shadow-lg transition-shadow"
+                className="overflow-hidden border-0 bg-white group cursor-pointer hover:shadow-lg transition-shadow rounded-2xl"
                 onClick={() => setSelectedItem(item)}
               >
                 <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                   <div className="absolute inset-0 bg-emerald-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
                       <ZoomIn className="w-8 h-8 text-white" />
@@ -86,17 +84,16 @@ export default function GaleriPage() {
                     </span>
                     <span className="text-xs text-gray-500">{item.year}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">
-                    {item.title}
-                  </h3>
+                  <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{item.title}</h3>
                 </div>
               </Card>
             ))}
           </div>
 
           {filteredItems.length === 0 && (
-            <div className="text-center py-16 text-gray-500">
-              <p className="text-lg">Belum ada foto untuk tahun ini.</p>
+            <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+              <ImageIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500 font-medium">Belum ada foto galeri.</p>
             </div>
           )}
         </div>
@@ -140,9 +137,6 @@ export default function GaleriPage() {
           </div>
         </div>
       )}
-
-      {/* Aesthetic Green Section */}
-      <section className="bg-emerald-600 h-24 lg:h-32 w-full"></section>
     </main>
   );
 }

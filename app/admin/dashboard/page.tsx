@@ -1,103 +1,146 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
 import { AdminLayout } from '@/components/admin-layout';
+import { Button } from '@/components/ui/button';
+import { dataService } from '@/lib/supabase';
 import Link from 'next/link';
+import { Newspaper, Image, Users, Layers, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState({
+    articlesCount: 0,
+    galleryCount: 0,
+    pengurusCount: 0,
+  });
+
+  useEffect(() => {
+    setStats({
+      articlesCount: dataService.getArticles().length,
+      galleryCount: dataService.getGallery().length,
+      pengurusCount: dataService.getPengurus().length,
+    });
+  }, []);
+
   return (
     <AdminLayout>
       <div className="space-y-8">
-        {/* Header */}
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900">Ringkasan Dashboard</h1>
-          <p className="text-gray-600 mt-2">Selamat datang di Portal Admin Yayasan Sahabat Nusantara</p>
+        {/* Welcome Banner */}
+        <div className="bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700 text-white rounded-3xl p-8 sm:p-10 shadow-xl relative overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 20% 80%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+            }}
+          />
+          <div className="relative z-10 max-w-2xl">
+            <span className="inline-flex items-center gap-1.5 bg-emerald-500/30 text-emerald-200 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4 border border-emerald-400/30">
+              <ShieldCheck className="w-3.5 h-3.5" /> Web Content Control Panel
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-3 leading-tight">
+              Selamat Datang di Portal Admin YSN
+            </h1>
+            <p className="text-emerald-100 text-sm sm:text-base leading-relaxed">
+              Kelola berita, foto galeri kegiatan, dan susunan pengurus Yayasan Sahabat Nusantara secara langsung dan real-time.
+            </p>
+          </div>
         </div>
 
-        {/* Impact Cards */}
+        {/* Real Dynamic Impact Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200 hover:shadow-lg transition-shadow">
-            <div className="text-5xl font-bold text-emerald-600 mb-2">150+</div>
-            <p className="text-gray-600 font-medium">Total Anggota</p>
-            <p className="text-sm text-gray-500 mt-2">Anggota terdaftar dalam organisasi</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200 hover:shadow-lg transition-shadow">
-            <div className="text-5xl font-bold text-blue-600 mb-2">120</div>
-            <p className="text-gray-600 font-medium">Bidang Kegiatan</p>
-            <p className="text-sm text-gray-500 mt-2">Anggota dengan status aktif</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200 hover:shadow-lg transition-shadow">
-            <div className="text-5xl font-bold text-amber-600 mb-2">25</div>
-            <p className="text-gray-600 font-medium">Kegiatan</p>
-            <p className="text-sm text-gray-500 mt-2">Program aktif saat ini</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md p-8 border border-gray-200 hover:shadow-lg transition-shadow">
-            <div className="text-5xl font-bold text-purple-600 mb-2">6</div>
-            <p className="text-gray-600 font-medium">Afiliasi</p>
-            <p className="text-sm text-gray-500 mt-2">Divisi dalam organisasi</p>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Akses Cepat</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link href="/admin/members">
-              <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 text-lg rounded-lg">
-                Kelola Anggota
-              </Button>
-            </Link>
-            <Link href="/admin/members?tab=reports">
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg rounded-lg">
-                Laporan
-              </Button>
-            </Link>
-            <Link href="/admin/members?tab=settings">
-              <Button className="w-full bg-gray-600 hover:bg-gray-700 text-white py-6 text-lg rounded-lg">
-                Pengaturan
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Usage Guide */}
-        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Panduan Penggunaan</h2>
-          <div className="space-y-4 text-gray-700">
-            <p>Portal Admin memungkinkan Anda untuk mengelola data anggota organisasi dengan mudah:</p>
-            <ul className="list-disc list-inside space-y-3 ml-2">
-              <li><strong>Kelola Anggota:</strong> Lihat, tambah, edit, dan hapus data anggota dengan form terstruktur</li>
-              <li><strong>Filter Data:</strong> Cari anggota berdasarkan nama, divisi, atau status</li>
-              <li><strong>Cetak Laporan:</strong> Generate laporan anggota dalam format printable</li>
-              <li><strong>Validasi Form:</strong> Semua input form tervalidasi untuk menjaga integritas data</li>
-              <li><strong>Supabase Ready:</strong> Sistem siap dikoneksi ke Supabase untuk data persistent</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-8 border border-emerald-200">
-            <h3 className="text-lg font-bold text-emerald-900 mb-4">Status Sistem</h3>
-            <div className="space-y-2 text-sm text-emerald-800">
-              <p>✓ Database Backend: Siap (Dummy Data)</p>
-              <p>✓ Form Validation: Aktif</p>
-              <p>✓ Print Features: Aktif</p>
-              <p>✓ Supabase Integration: Ready</p>
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <Newspaper className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">Aktif</span>
             </div>
+            <div className="text-4xl font-bold text-gray-900 mb-1">{stats.articlesCount}</div>
+            <p className="text-gray-500 font-semibold text-sm">Artikel Berita</p>
+            <p className="text-xs text-gray-400 mt-2">Dipublikasikan di website</p>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-8 border border-blue-200">
-            <h3 className="text-lg font-bold text-blue-900 mb-4">Tips & Trik</h3>
-            <div className="space-y-2 text-sm text-blue-800">
-              <p>• Gunakan filter untuk mencari anggota spesifik dengan cepat</p>
-              <p>• Cetak laporan menggunakan fitur browser print (Ctrl+P)</p>
-              <p>• Validasi form memastikan data berkualitas</p>
-              <p>• Sidebar memberi akses mudah ke semua menu utama</p>
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <Image className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full">Foto</span>
             </div>
+            <div className="text-4xl font-bold text-gray-900 mb-1">{stats.galleryCount}</div>
+            <p className="text-gray-500 font-semibold text-sm">Galeri Kegiatan</p>
+            <p className="text-xs text-gray-400 mt-2">Dokumentasi program</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                <Users className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full">Pengurus</span>
+            </div>
+            <div className="text-4xl font-bold text-gray-900 mb-1">{stats.pengurusCount}</div>
+            <p className="text-gray-500 font-semibold text-sm">Susunan Kepengurusan</p>
+            <p className="text-xs text-gray-400 mt-2">Pembina s/d Pelaksana</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                <Layers className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full">2025–2030</span>
+            </div>
+            <div className="text-4xl font-bold text-gray-900 mb-1">4</div>
+            <p className="text-gray-500 font-semibold text-sm">Pilar Program Terpadu</p>
+            <p className="text-xs text-gray-400 mt-2">Penghijauan, Pendidikan, dll</p>
+          </div>
+        </div>
+
+        {/* Quick Management Shortcuts */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Akses Cepat Pengelolaan Website</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <Link href="/admin/berita" className="group">
+              <div className="p-6 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl hover:bg-emerald-100/80 transition-all flex flex-col justify-between h-full">
+                <div>
+                  <Newspaper className="w-8 h-8 text-emerald-700 mb-3" />
+                  <h3 className="font-bold text-gray-900 text-lg mb-1">Kelola Berita</h3>
+                  <p className="text-gray-600 text-xs leading-relaxed">Publish artikel & kabar kegiatan terbaru yayasan.</p>
+                </div>
+                <div className="mt-4 flex items-center gap-1.5 text-xs font-bold text-emerald-700 group-hover:translate-x-1 transition-transform">
+                  Buka Menu <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            </Link>
+
+            <Link href="/admin/galeri" className="group">
+              <div className="p-6 bg-blue-50/70 border border-blue-200/80 rounded-2xl hover:bg-blue-100/80 transition-all flex flex-col justify-between h-full">
+                <div>
+                  <Image className="w-8 h-8 text-blue-700 mb-3" />
+                  <h3 className="font-bold text-gray-900 text-lg mb-1">Kelola Galeri</h3>
+                  <p className="text-gray-600 text-xs leading-relaxed">Upload foto dokumentasi aksi nyata lapangan.</p>
+                </div>
+                <div className="mt-4 flex items-center gap-1.5 text-xs font-bold text-blue-700 group-hover:translate-x-1 transition-transform">
+                  Buka Menu <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            </Link>
+
+            <Link href="/admin/pengurus" className="group">
+              <div className="p-6 bg-purple-50/70 border border-purple-200/80 rounded-2xl hover:bg-purple-100/80 transition-all flex flex-col justify-between h-full">
+                <div>
+                  <Users className="w-8 h-8 text-purple-700 mb-3" />
+                  <h3 className="font-bold text-gray-900 text-lg mb-1">Kelola Pengurus</h3>
+                  <p className="text-gray-600 text-xs leading-relaxed">Update susunan Pembina, Pengawas, & Pengurus.</p>
+                </div>
+                <div className="mt-4 flex items-center gap-1.5 text-xs font-bold text-purple-700 group-hover:translate-x-1 transition-transform">
+                  Buka Menu <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
