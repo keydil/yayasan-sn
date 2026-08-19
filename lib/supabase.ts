@@ -46,6 +46,8 @@ export interface Article {
   category: string;
   date: string;
   image: string;
+  images?: string[];
+  videoUrl?: string;
 }
 
 export interface GalleryItem {
@@ -211,6 +213,8 @@ export const dataService = {
             category: item.category,
             date: item.date,
             image: item.image,
+            images: Array.isArray(item.images) ? item.images : (typeof item.images === 'string' && item.images.startsWith('[') ? JSON.parse(item.images) : []),
+            videoUrl: item.videoUrl || item.video_url || '',
           }));
           setStore(STORAGE_KEYS.ARTICLES, mapped);
           return mapped;
@@ -235,6 +239,8 @@ export const dataService = {
             category: data.category,
             date: data.date,
             image: data.image,
+            images: Array.isArray(data.images) ? data.images : (typeof data.images === 'string' && data.images.startsWith('[') ? JSON.parse(data.images) : []),
+            videoUrl: data.videoUrl || data.video_url || '',
           };
         }
       }
@@ -255,30 +261,29 @@ export const dataService = {
       category: article.category,
       date: formattedDate,
       image: article.image,
+      images: article.images || [],
+      videoUrl: article.videoUrl || '',
     };
 
     try {
       if (supabaseUrl && supabaseAnonKey) {
+        const payload: any = {
+          title: article.title,
+          excerpt: article.excerpt,
+          content: article.content,
+          category: article.category,
+          date: formattedDate,
+          image: article.image,
+          images: JSON.stringify(article.images || []),
+          video_url: article.videoUrl || '',
+        };
+
         if (article.id && !isNaN(Number(article.id))) {
           // Update existing DB row
-          await supabase.from('articles').update({
-            title: article.title,
-            excerpt: article.excerpt,
-            content: article.content,
-            category: article.category,
-            date: formattedDate,
-            image: article.image,
-          }).eq('id', article.id);
+          await supabase.from('articles').update(payload).eq('id', article.id);
         } else {
           // Insert new DB row
-          const { data, error } = await supabase.from('articles').insert([{
-            title: article.title,
-            excerpt: article.excerpt,
-            content: article.content,
-            category: article.category,
-            date: formattedDate,
-            image: article.image,
-          }]).select().single();
+          const { data, error } = await supabase.from('articles').insert([payload]).select().single();
 
           if (!error && data) {
             savedItem.id = String(data.id);

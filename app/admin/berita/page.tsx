@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { dataService, Article } from '@/lib/supabase';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Plus, Edit2, Trash2, Newspaper, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { MultiImageUpload } from '@/components/ui/multi-image-upload';
+import { Plus, Edit2, Trash2, Newspaper, ArrowLeft, Image as ImageIcon, Video } from 'lucide-react';
 
 export default function AdminBeritaPage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -18,6 +19,8 @@ export default function AdminBeritaPage() {
     content: '',
     category: 'Penghijauan',
     image: '',
+    images: [],
+    videoUrl: '',
   });
 
   useEffect(() => {
@@ -38,6 +41,8 @@ export default function AdminBeritaPage() {
       content: '',
       category: 'Penghijauan',
       image: '',
+      images: [],
+      videoUrl: '',
     });
     setIsEditing(true);
   };
@@ -67,6 +72,8 @@ export default function AdminBeritaPage() {
       content: currentArticle.content || currentArticle.excerpt || '',
       category: currentArticle.category || 'Penghijauan',
       image: currentArticle.image || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
+      images: currentArticle.images || [],
+      videoUrl: currentArticle.videoUrl || '',
       date: currentArticle.date,
     });
 
@@ -149,8 +156,30 @@ export default function AdminBeritaPage() {
               <ImageUpload
                 value={currentArticle.image || ''}
                 onChange={(val) => setCurrentArticle({ ...currentArticle, image: val })}
-                label="Foto / Gambar Header Artikel"
+                label="Foto Sampul Utama (Header)"
               />
+
+              <MultiImageUpload
+                value={currentArticle.images || []}
+                onChange={(imgs) => setCurrentArticle({ ...currentArticle, images: imgs })}
+                label="Galeri Dokumentasi Foto Tambahan"
+              />
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                  Link Video Dokumentasi (YouTube URL) <span className="text-gray-400 font-normal">(Opsional)</span>
+                </label>
+                <div className="relative">
+                  <Video className="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="url"
+                    value={currentArticle.videoUrl || ''}
+                    onChange={(e) => setCurrentArticle({ ...currentArticle, videoUrl: e.target.value })}
+                    placeholder="Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ atau https://youtu.be/..."
+                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-medium"
+                  />
+                </div>
+              </div>
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
