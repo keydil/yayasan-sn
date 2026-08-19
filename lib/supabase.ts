@@ -289,13 +289,13 @@ export const dataService = {
           video_url: article.videoUrl || '',
         };
 
-        if (article.id && !isNaN(Number(article.id))) {
-          // Update existing DB row
+        if (article.id) {
+          // UPDATE existing row — works for both UUID and integer IDs
           let { error } = await supabase.from('articles').update(fullPayload).eq('id', article.id);
           if (error) {
             console.warn('Full payload update failed, retrying base payload:', error.message);
             const res = await supabase.from('articles').update(basePayload).eq('id', article.id);
-            if (res.error) console.error('Supabase update error:', res.error);
+            if (res.error) console.error('[Supabase] Update articles error:', res.error);
           }
         } else {
           // Insert new DB row
@@ -422,13 +422,15 @@ export const dataService = {
 
     try {
       if (supabaseUrl && supabaseAnonKey) {
-        if (item.id && !isNaN(Number(item.id))) {
-          await supabase.from('gallery').update({
+        if (item.id) {
+          // UPDATE existing row — works for both UUID and integer IDs
+          const { error } = await supabase.from('gallery').update({
             title: item.title,
             category: item.category,
             year: item.year,
             image: item.image,
           }).eq('id', item.id);
+          if (error) console.error('[Supabase] Update gallery error:', error.message);
         } else {
           const { data, error } = await supabase.from('gallery').insert([{
             title: item.title,
@@ -436,14 +438,12 @@ export const dataService = {
             year: item.year,
             image: item.image,
           }]).select().single();
-
-          if (!error && data) {
-            savedItem.id = String(data.id);
-          }
+          if (error) console.error('[Supabase] Insert gallery error:', error.message);
+          if (!error && data) savedItem.id = String(data.id);
         }
       }
     } catch (err) {
-      console.warn('Supabase save gallery fallback:', err);
+      console.error('[Supabase] saveGallery exception:', err);
     }
 
     const gallery = getStore(STORAGE_KEYS.GALLERY, initialGallery);
@@ -517,26 +517,27 @@ export const dataService = {
 
     try {
       if (supabaseUrl && supabaseAnonKey) {
-        if (item.id && !isNaN(Number(item.id))) {
-          await supabase.from('pengurus').update({
+        if (item.id) {
+          // UPDATE existing row — works for both UUID and integer IDs
+          const { error } = await supabase.from('pengurus').update({
             name: item.name,
             role: item.role,
             tier: item.tier,
           }).eq('id', item.id);
+          if (error) console.error('[Supabase] Update pengurus error:', error.message);
         } else {
+          // INSERT new row
           const { data, error } = await supabase.from('pengurus').insert([{
             name: item.name,
             role: item.role,
             tier: item.tier,
           }]).select().single();
-
-          if (!error && data) {
-            savedItem.id = String(data.id);
-          }
+          if (error) console.error('[Supabase] Insert pengurus error:', error.message);
+          if (!error && data) savedItem.id = String(data.id);
         }
       }
     } catch (err) {
-      console.warn('Supabase save pengurus fallback:', err);
+      console.error('[Supabase] savePengurus exception:', err);
     }
 
     const list = getStore(STORAGE_KEYS.PENGURUS, initialPengurus);
