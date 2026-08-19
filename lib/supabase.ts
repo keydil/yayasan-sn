@@ -68,6 +68,7 @@ export interface GalleryItem {
   category: string;
   year: string;
   image: string;
+  images?: string[];
 }
 
 export interface PengurusItem {
@@ -182,7 +183,7 @@ export const dataService = {
         if (!error && data && data.length > 0) {
           const mapped: Article[] = data.map((item: any) => ({
             id: String(item.id),
-            slug: item.slug || '',
+            slug: item.slug || generateSlug(item.title),
             title: item.title,
             excerpt: item.excerpt,
             content: item.content || '',
@@ -205,7 +206,7 @@ export const dataService = {
   getArticleById: async (idOrSlug: string): Promise<Article | undefined> => {
     const mapRow = (data: any): Article => ({
       id: String(data.id),
-      slug: data.slug || '',
+      slug: data.slug || generateSlug(data.title),
       title: data.title,
       excerpt: data.excerpt,
       content: data.content || '',
@@ -341,6 +342,7 @@ export const dataService = {
             category: item.category,
             year: item.year,
             image: item.image,
+            images: Array.isArray(item.images) ? item.images : (typeof item.images === 'string' && item.images.startsWith('[') ? JSON.parse(item.images) : []),
           }));
           setStore(STORAGE_KEYS.GALLERY, mapped);
           return mapped;
@@ -359,28 +361,40 @@ export const dataService = {
       category: item.category,
       year: item.year,
       image: item.image,
+      images: item.images || [],
     };
 
     try {
       if (supabaseUrl && supabaseAnonKey) {
+        const fullPayload = {
+          title: item.title,
+          category: item.category,
+          year: item.year,
+          image: item.image,
+          images: JSON.stringify(item.images || []),
+        };
+        const basePayload = {
+          title: item.title,
+          category: item.category,
+          year: item.year,
+          image: item.image,
+        };
+
         if (item.id) {
-          // UPDATE existing row — works for both UUID and integer IDs
-          const { error } = await supabase.from('gallery').update({
-            title: item.title,
-            category: item.category,
-            year: item.year,
-            image: item.image,
-          }).eq('id', item.id);
-          if (error) console.error('[Supabase] Update gallery error:', error.message);
+          let { error } = await supabase.from('gallery').update(fullPayload).eq('id', item.id);
+          if (error) {
+            console.warn('[Supabase] Full gallery update failed, retrying base:', error.message);
+            const res = await supabase.from('gallery').update(basePayload).eq('id', item.id);
+            if (res.error) console.error('[Supabase] Update gallery error:', res.error.message);
+          }
         } else {
-          const { data, error } = await supabase.from('gallery').insert([{
-            title: item.title,
-            category: item.category,
-            year: item.year,
-            image: item.image,
-          }]).select().single();
-          if (error) console.error('[Supabase] Insert gallery error:', error.message);
-          if (!error && data) savedItem.id = String(data.id);
+          let res = await supabase.from('gallery').insert([fullPayload]).select().single();
+          if (res.error) {
+            console.warn('[Supabase] Full gallery insert failed, retrying base:', res.error.message);
+            res = await supabase.from('gallery').insert([basePayload]).select().single();
+          }
+          if (res.error) console.error('[Supabase] Insert gallery error:', res.error.message);
+          if (!res.error && res.data) savedItem.id = String(res.data.id);
         }
       }
     } catch (err) {
@@ -390,11 +404,7 @@ export const dataService = {
     const gallery = getStore(STORAGE_KEYS.GALLERY, initialGallery);
     if (item.id) {
       const idx = gallery.findIndex((g) => g.id === item.id);
-      if (idx !== -1) {
-        gallery[idx] = savedItem;
-      } else {
-        gallery.unshift(savedItem);
-      }
+      if (idx !== -1) { gallery[idx] = savedItem; } else { gallery.unshift(savedItem); }
     } else {
       gallery.unshift(savedItem);
     }

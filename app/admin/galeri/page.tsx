@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { dataService, GalleryItem } from '@/lib/supabase';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Plus, Trash2, Image as ImageIcon, ArrowLeft } from 'lucide-react';
+import { MultiImageUpload } from '@/components/ui/multi-image-upload';
+import { Plus, Trash2, Image as ImageIcon, ArrowLeft, Images } from 'lucide-react';
 
 export default function AdminGaleriPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -17,11 +18,10 @@ export default function AdminGaleriPage() {
     category: 'Penghijauan',
     year: new Date().getFullYear().toString(),
     image: '',
+    images: [],
   });
 
-  useEffect(() => {
-    loadGallery();
-  }, []);
+  useEffect(() => { loadGallery(); }, []);
 
   const loadGallery = async () => {
     setLoading(true);
@@ -48,15 +48,11 @@ export default function AdminGaleriPage() {
       category: newItem.category || 'Penghijauan',
       year: newItem.year || '2025',
       image: newItem.image || '',
+      images: newItem.images || [],
     });
 
     setIsEditing(false);
-    setNewItem({
-      title: '',
-      category: 'Penghijauan',
-      year: new Date().getFullYear().toString(),
-      image: '',
-    });
+    setNewItem({ title: '', category: 'Penghijauan', year: new Date().getFullYear().toString(), image: '', images: [] });
     await loadGallery();
   };
 
@@ -82,7 +78,7 @@ export default function AdminGaleriPage() {
           )}
         </div>
 
-        {/* Add Modal Form */}
+        {/* Add / Edit Form */}
         {isEditing ? (
           <Card className="bg-white p-6 sm:p-8 rounded-2xl border border-emerald-200 shadow-lg">
             <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
@@ -135,10 +131,9 @@ export default function AdminGaleriPage() {
                   <ImageUpload
                     value={newItem.image || ''}
                     onChange={(val) => setNewItem({ ...newItem, image: val })}
-                    label="Foto Kegiatan Galeri"
+                    label="Foto Cover Galeri (Utama) *"
                   />
                 </div>
-
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
                     Tahun Kegiatan *
@@ -154,27 +149,29 @@ export default function AdminGaleriPage() {
                 </div>
               </div>
 
+              {/* Multi-image upload */}
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <Images className="w-4 h-4 text-emerald-600" />
+                  FOTO DOKUMENTASI TAMBAHAN <span className="text-gray-400 font-normal normal-case">(Opsional - bisa pilih banyak foto)</span>
+                </label>
+                <MultiImageUpload
+                  values={newItem.images || []}
+                  onChange={(vals) => setNewItem({ ...newItem, images: vals })}
+                />
+              </div>
+
               <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsEditing(false)}
-                  className="border-gray-200 text-gray-600 hover:bg-gray-50"
-                >
+                <Button type="button" variant="outline" onClick={() => setIsEditing(false)} className="border-gray-200 text-gray-600 hover:bg-gray-50">
                   Batal
                 </Button>
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md"
-                >
+                <Button type="submit" disabled={loading} className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md">
                   {loading ? 'Menyimpan...' : 'Simpan & Publikasikan'}
                 </Button>
               </div>
             </form>
           </Card>
         ) : (
-          /* Gallery Grid */
           <div>
             {loading ? (
               <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
@@ -200,8 +197,12 @@ export default function AdminGaleriPage() {
                       <span className="absolute top-3 right-3 bg-black/60 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur">
                         {item.year}
                       </span>
+                      {item.images && item.images.length > 0 && (
+                        <span className="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur flex items-center gap-1">
+                          <Images className="w-3 h-3" /> +{item.images.length}
+                        </span>
+                      )}
                     </div>
-
                     <div className="p-4 flex items-center justify-between gap-3 border-t border-gray-100 bg-white">
                       <h3 className="font-bold text-gray-900 text-sm truncate flex-1">{item.title}</h3>
                       <Button

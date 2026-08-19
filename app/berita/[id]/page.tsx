@@ -15,7 +15,7 @@ function getYouTubeEmbedUrl(url?: string): string | null {
   return null;
 }
 
-function PhotoCarousel({ images }: { images: string[] }) {
+function CombinedHeroCarousel({ images, title }: { images: string[]; title: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightbox, setLightbox] = useState(false);
 
@@ -35,85 +35,90 @@ function PhotoCarousel({ images }: { images: string[] }) {
 
   return (
     <>
-      {/* Lightbox */}
+      {/* Lightbox Fullscreen Modal */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center"
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center"
           onClick={() => setLightbox(false)}
         >
           <button
             onClick={() => setLightbox(false)}
-            className="absolute top-4 right-4 text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition-all z-10"
+            className="absolute top-4 right-4 text-white/70 hover:text-white p-2.5 rounded-full hover:bg-white/10 transition-all z-10"
           >
             <X className="w-7 h-7" />
           </button>
 
           <div className="relative w-full max-w-5xl px-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={prev}
-              className="absolute left-2 sm:left-6 z-10 bg-white/10 hover:bg-white/25 text-white p-3 rounded-full backdrop-blur transition-all"
-            >
-              <ChevronLeft className="w-7 h-7" />
-            </button>
+            {images.length > 1 && (
+              <button
+                onClick={prev}
+                className="absolute left-2 sm:left-6 z-10 bg-white/10 hover:bg-white/25 text-white p-3 rounded-full backdrop-blur transition-all"
+              >
+                <ChevronLeft className="w-7 h-7" />
+              </button>
+            )}
 
             <img
               src={images[activeIdx]}
-              alt={`Foto ${activeIdx + 1}`}
+              alt={`${title} - Foto ${activeIdx + 1}`}
               className="max-h-[80vh] max-w-full object-contain rounded-xl shadow-2xl"
             />
 
-            <button
-              onClick={next}
-              className="absolute right-2 sm:right-6 z-10 bg-white/10 hover:bg-white/25 text-white p-3 rounded-full backdrop-blur transition-all"
-            >
-              <ChevronRight className="w-7 h-7" />
-            </button>
-          </div>
-
-          <p className="text-white/50 text-sm mt-4 font-medium">{activeIdx + 1} / {images.length}</p>
-
-          {/* Lightbox thumbnails */}
-          <div className="flex gap-2 mt-4 px-4 overflow-x-auto max-w-full pb-2">
-            {images.map((img, idx) => (
+            {images.length > 1 && (
               <button
-                key={idx}
-                onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
-                className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${idx === activeIdx ? 'border-emerald-400 scale-110' : 'border-white/20 opacity-60 hover:opacity-100'}`}
+                onClick={next}
+                className="absolute right-2 sm:right-6 z-10 bg-white/10 hover:bg-white/25 text-white p-3 rounded-full backdrop-blur transition-all"
               >
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <ChevronRight className="w-7 h-7" />
               </button>
-            ))}
+            )}
           </div>
+
+          <p className="text-white/60 text-sm mt-4 font-medium">{activeIdx + 1} / {images.length}</p>
+
+          {/* Lightbox thumbnail bar */}
+          {images.length > 1 && (
+            <div className="flex gap-2 mt-4 px-4 overflow-x-auto max-w-full pb-2">
+              {images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
+                  className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
+                    idx === activeIdx ? 'border-emerald-400 scale-110 ring-2 ring-emerald-400/50' : 'border-white/20 opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
-      {/* Carousel */}
-      <div className="mb-12 rounded-3xl overflow-hidden border border-gray-200 bg-gray-950 shadow-xl">
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-gray-900 border-b border-gray-800">
-          <span className="text-white font-bold text-sm tracking-wide">
-            📸 Galeri Dokumentasi Foto
-          </span>
-          <span className="text-gray-400 text-xs font-medium">{activeIdx + 1} / {images.length}</span>
-        </div>
-
-        {/* Main Image */}
+      {/* Main Top Hero Carousel */}
+      <div className="mb-10 rounded-3xl overflow-hidden border border-gray-200 bg-gray-950 shadow-xl">
+        {/* Main Display Area */}
         <div className="relative aspect-[16/9] bg-black group cursor-zoom-in" onClick={() => setLightbox(true)}>
           <img
             key={activeIdx}
             src={images[activeIdx]}
-            alt={`Foto ${activeIdx + 1}`}
-            className="w-full h-full object-contain transition-opacity duration-300"
+            alt={`${title} - Foto ${activeIdx + 1}`}
+            className="w-full h-full object-cover transition-opacity duration-300"
           />
 
-          {/* Overlay zoom hint */}
+          {/* Hover Zoom Prompt */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
-            <div className="bg-black/60 text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur">
-              <ZoomIn className="w-4 h-4" /> Klik untuk perbesar
+            <div className="bg-black/60 text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur shadow-lg">
+              <ZoomIn className="w-4 h-4" /> Klik untuk Fullscreen
             </div>
           </div>
 
-          {/* Prev / Next arrows */}
+          {/* Top Badge Counter */}
+          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full shadow">
+            {activeIdx + 1} / {images.length} Foto
+          </div>
+
+          {/* Navigation Arrows */}
           {images.length > 1 && (
             <>
               <button
@@ -131,34 +136,34 @@ function PhotoCarousel({ images }: { images: string[] }) {
             </>
           )}
 
-          {/* Dot indicators */}
+          {/* Bottom Dot Indicators */}
           {images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
               {images.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
-                  className={`rounded-full transition-all ${idx === activeIdx ? 'w-5 h-2 bg-white' : 'w-2 h-2 bg-white/40 hover:bg-white/70'}`}
+                  className={`rounded-full transition-all ${idx === activeIdx ? 'w-6 h-2 bg-emerald-400' : 'w-2 h-2 bg-white/50 hover:bg-white'}`}
                 />
               ))}
             </div>
           )}
         </div>
 
-        {/* Thumbnail Strip */}
+        {/* Bottom Thumbnail Strip (Shopee / Tokped style) */}
         {images.length > 1 && (
-          <div className="flex gap-2 p-3 bg-gray-900 overflow-x-auto scrollbar-thin">
+          <div className="flex gap-2.5 p-3.5 bg-gray-900 overflow-x-auto scrollbar-thin">
             {images.map((img, idx) => (
               <button
                 key={idx}
                 onClick={() => setActiveIdx(idx)}
                 className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all ${
                   idx === activeIdx
-                    ? 'border-emerald-400 ring-2 ring-emerald-400/30 scale-105'
-                    : 'border-transparent opacity-55 hover:opacity-90'
+                    ? 'border-emerald-400 ring-2 ring-emerald-400/40 scale-105 opacity-100'
+                    : 'border-transparent opacity-50 hover:opacity-90'
                 }`}
               >
-                <img src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
@@ -211,6 +216,11 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
 
   const embedVideoUrl = getYouTubeEmbedUrl(article.videoUrl);
 
+  // Combine cover image and extra images into ONE list for top carousel
+  const allPhotos = Array.from(
+    new Set([article.image, ...(article.images || [])].filter(Boolean))
+  );
+
   return (
     <main className="min-h-screen bg-white py-12 sm:py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -219,7 +229,7 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Kembali ke Semua Berita
         </Link>
 
-        {/* Category & Date */}
+        {/* Category & Date Header */}
         <div className="flex flex-wrap items-center gap-4 mb-4">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">
             <Tag className="w-3.5 h-3.5" /> {article.category}
@@ -229,17 +239,15 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
           </span>
         </div>
 
-        {/* Title */}
+        {/* Article Title */}
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
           {article.title}
         </h1>
 
-        {/* Header Banner Image */}
-        <div className="aspect-[16/9] rounded-3xl overflow-hidden bg-gray-100 mb-10 shadow-lg border border-gray-100">
-          <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
-        </div>
+        {/* SINGLE COMBINED HERO CAROUSEL AT THE TOP */}
+        <CombinedHeroCarousel images={allPhotos} title={article.title} />
 
-        {/* Excerpt Highlight */}
+        {/* Excerpt Highlight Box */}
         <div className="p-6 bg-emerald-50/70 border-l-4 border-emerald-600 rounded-r-2xl mb-8">
           <p className="text-emerald-950 font-medium text-lg leading-relaxed italic">{article.excerpt}</p>
         </div>
@@ -249,16 +257,11 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
           {article.content}
         </div>
 
-        {/* Carousel — Dokumentasi Foto */}
-        {article.images && article.images.length > 0 && (
-          <PhotoCarousel images={article.images} />
-        )}
-
-        {/* Video Embed */}
+        {/* Video Embed Section (If Available) */}
         {embedVideoUrl && (
           <div className="mb-12 bg-gray-900 rounded-3xl p-4 sm:p-6 shadow-xl border border-gray-800">
             <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase tracking-wider mb-4">
-              <Video className="w-5 h-5" /> Dokumentasi Video Kegiatan
+              <Video className="w-5 h-5 text-emerald-400" /> Dokumentasi Video Kegiatan
             </div>
             <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black">
               <iframe

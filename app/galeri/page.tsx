@@ -1,9 +1,81 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { useState, useEffect } from 'react';
-import { X, ZoomIn, Image as ImageIcon } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { X, ZoomIn, Image as ImageIcon, ChevronLeft, ChevronRight, Images } from 'lucide-react';
 import { dataService, GalleryItem } from '@/lib/supabase';
+
+function ModalCarousel({ images, title }: { images: string[]; title: string }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  const prev = useCallback(() => setActiveIdx((i) => (i - 1 + images.length) % images.length), [images.length]);
+  const next = useCallback(() => setActiveIdx((i) => (i + 1) % images.length), [images.length]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [prev, next]);
+
+  return (
+    <div className="bg-gray-950">
+      {/* Main Image Display */}
+      <div className="relative aspect-[16/9] bg-black flex items-center justify-center group overflow-hidden">
+        <img
+          key={activeIdx}
+          src={images[activeIdx]}
+          alt={`${title} - Foto ${activeIdx + 1}`}
+          className="max-h-full max-w-full object-contain"
+        />
+
+        {/* Counter Badge */}
+        <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">
+          {activeIdx + 1} / {images.length}
+        </div>
+
+        {/* Navigation Arrows */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={prev}
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2.5 rounded-full backdrop-blur transition-all"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={next}
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2.5 rounded-full backdrop-blur transition-all"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Thumbnail Strip */}
+      {images.length > 1 && (
+        <div className="flex gap-2 p-3 bg-gray-900 overflow-x-auto scrollbar-thin">
+          {images.map((img, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveIdx(idx)}
+              className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                idx === activeIdx
+                  ? 'border-emerald-400 ring-2 ring-emerald-400/40 opacity-100 scale-105'
+                  : 'border-transparent opacity-50 hover:opacity-90'
+              }`}
+            >
+              <img src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function GaleriPage() {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
@@ -72,35 +144,43 @@ export default function GaleriPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems.map((item) => (
-                <Card
-                  key={item.id}
-                  className="overflow-hidden border-0 bg-white group cursor-pointer hover:shadow-lg transition-shadow rounded-2xl"
-                  onClick={() => setSelectedItem(item)}
-                >
-                  <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-emerald-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
-                        <ZoomIn className="w-8 h-8 text-white" />
+              {filteredItems.map((item) => {
+                const itemPhotos = Array.from(new Set([item.image, ...(item.images || [])].filter(Boolean)));
+                return (
+                  <Card
+                    key={item.id}
+                    className="overflow-hidden border-0 bg-white group cursor-pointer hover:shadow-lg transition-shadow rounded-2xl"
+                    onClick={() => setSelectedItem(item)}
+                  >
+                    <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-emerald-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                          <ZoomIn className="w-8 h-8 text-white" />
+                        </div>
                       </div>
+                      {itemPhotos.length > 1 && (
+                        <div className="absolute top-3 right-3 bg-black/70 text-white text-[11px] font-bold px-2.5 py-1 rounded-full backdrop-blur flex items-center gap-1">
+                          <Images className="w-3.5 h-3.5" /> {itemPhotos.length} Foto
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  <div className="p-4 sm:p-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-                        {item.category}
-                      </span>
-                      <span className="text-xs text-gray-500">{item.year}</span>
+                    <div className="p-4 sm:p-6">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                          {item.category}
+                        </span>
+                        <span className="text-xs text-gray-500">{item.year}</span>
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{item.title}</h3>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{item.title}</h3>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
             </div>
           )}
 
@@ -113,18 +193,18 @@ export default function GaleriPage() {
         </div>
       </section>
 
-      {/* Zoom / Popup Modal */}
+      {/* Zoom / Carousel Popup Modal */}
       {selectedItem && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setSelectedItem(null)}
         >
           <div
-            className="bg-white rounded-2xl overflow-hidden max-w-3xl w-full shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+            className="bg-white rounded-2xl overflow-hidden max-w-4xl w-full shadow-2xl animate-in fade-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+            {/* Header bar */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
               <div className="flex items-center gap-2">
                 <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
                   {selectedItem.category}
@@ -133,19 +213,20 @@ export default function GaleriPage() {
               </div>
               <button
                 onClick={() => setSelectedItem(null)}
-                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
               >
                 <X className="w-5 h-5 text-gray-600" />
               </button>
             </div>
 
-            {/* Image Area */}
-            <div className="aspect-video bg-gray-200 relative overflow-hidden">
-              <img src={selectedItem.image} alt={selectedItem.title} className="w-full h-full object-cover" />
-            </div>
+            {/* Carousel display for modal */}
+            <ModalCarousel
+              images={Array.from(new Set([selectedItem.image, ...(selectedItem.images || [])].filter(Boolean)))}
+              title={selectedItem.title}
+            />
 
-            {/* Caption */}
-            <div className="p-6">
+            {/* Title / Caption */}
+            <div className="p-5 bg-white border-t border-gray-100">
               <h3 className="text-xl font-bold text-gray-900">{selectedItem.title}</h3>
             </div>
           </div>
