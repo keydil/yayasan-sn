@@ -479,7 +479,13 @@ export const dataService = {
     const localList = getStore(STORAGE_KEYS.PENGURUS, initialPengurus);
     try {
       if (supabaseUrl && supabaseAnonKey) {
-        const { data, error } = await supabase.from('pengurus').select('*').order('created_at', { ascending: true });
+        let { data, error } = await supabase.from('pengurus').select('*').order('created_at', { ascending: true });
+        if (error) {
+          const res = await supabase.from('pengurus').select('*');
+          data = res.data;
+          error = res.error;
+        }
+
         if (!error && data) {
           if (data.length === 0) {
             await supabase.from('pengurus').insert(initialPengurus);
