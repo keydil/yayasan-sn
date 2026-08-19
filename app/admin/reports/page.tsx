@@ -111,9 +111,9 @@ Rendra Wijaya,rendra.wijaya@email.com,+62 877 7777 8888,Air Bersih,Aktif,2024-02
 
         {/* Navigation */}
         <div className="text-center">
-          <Link href="/admin/members">
+          <Link href="/admin/dashboard">
             <Button variant="outline" className="border-emerald-600 text-emerald-600">
-              ← Kembali ke Manajemen Anggota
+              ← Kembali ke Dashboard Admin
             </Button>
           </Link>
         </div>
