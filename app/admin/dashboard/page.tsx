@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { AdminLayout } from '@/components/admin-layout';
-import { Button } from '@/components/ui/button';
 import { dataService } from '@/lib/supabase';
 import Link from 'next/link';
 import { Newspaper, Image, Users, Layers, ArrowRight, ShieldCheck } from 'lucide-react';
@@ -13,14 +12,26 @@ export default function DashboardPage() {
     galleryCount: 0,
     pengurusCount: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setStats({
-      articlesCount: dataService.getArticles().length,
-      galleryCount: dataService.getGallery().length,
-      pengurusCount: dataService.getPengurus().length,
-    });
+    loadStats();
   }, []);
+
+  const loadStats = async () => {
+    setLoading(true);
+    const [articles, gallery, pengurus] = await Promise.all([
+      dataService.getArticles(),
+      dataService.getGallery(),
+      dataService.getPengurus(),
+    ]);
+    setStats({
+      articlesCount: articles.length,
+      galleryCount: gallery.length,
+      pengurusCount: pengurus.length,
+    });
+    setLoading(false);
+  };
 
   return (
     <AdminLayout>
@@ -57,7 +68,7 @@ export default function DashboardPage() {
               </div>
               <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">Aktif</span>
             </div>
-            <div className="text-4xl font-bold text-gray-900 mb-1">{stats.articlesCount}</div>
+            <div className="text-4xl font-bold text-gray-900 mb-1">{loading ? '...' : stats.articlesCount}</div>
             <p className="text-gray-500 font-semibold text-sm">Artikel Berita</p>
             <p className="text-xs text-gray-400 mt-2">Dipublikasikan di website</p>
           </div>
@@ -69,7 +80,7 @@ export default function DashboardPage() {
               </div>
               <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full">Foto</span>
             </div>
-            <div className="text-4xl font-bold text-gray-900 mb-1">{stats.galleryCount}</div>
+            <div className="text-4xl font-bold text-gray-900 mb-1">{loading ? '...' : stats.galleryCount}</div>
             <p className="text-gray-500 font-semibold text-sm">Galeri Kegiatan</p>
             <p className="text-xs text-gray-400 mt-2">Dokumentasi program</p>
           </div>
@@ -81,7 +92,7 @@ export default function DashboardPage() {
               </div>
               <span className="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full">Pengurus</span>
             </div>
-            <div className="text-4xl font-bold text-gray-900 mb-1">{stats.pengurusCount}</div>
+            <div className="text-4xl font-bold text-gray-900 mb-1">{loading ? '...' : stats.pengurusCount}</div>
             <p className="text-gray-500 font-semibold text-sm">Susunan Kepengurusan</p>
             <p className="text-xs text-gray-400 mt-2">Pembina s/d Pelaksana</p>
           </div>

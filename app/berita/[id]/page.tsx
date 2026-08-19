@@ -2,19 +2,37 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Tag, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Tag } from 'lucide-react';
 import { dataService, Article } from '@/lib/supabase';
 
 export default function BeritaDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const [article, setArticle] = useState<Article | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const found = dataService.getArticleById(resolvedParams.id);
+    fetchArticle();
+  }, [resolvedParams.id]);
+
+  const fetchArticle = async () => {
+    setLoading(true);
+    const found = await dataService.getArticleById(resolvedParams.id);
     if (found) {
       setArticle(found);
     }
-  }, [resolvedParams.id]);
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-gray-500 text-sm font-medium">Memuat isi berita...</p>
+        </div>
+      </main>
+    );
+  }
 
   if (!article) {
     return (

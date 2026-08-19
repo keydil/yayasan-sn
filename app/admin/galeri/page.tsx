@@ -9,6 +9,7 @@ import { Plus, Trash2, Image as ImageIcon, ArrowLeft } from 'lucide-react';
 
 export default function AdminGaleriPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [newItem, setNewItem] = useState<Partial<GalleryItem>>({
     title: '',
@@ -21,22 +22,27 @@ export default function AdminGaleriPage() {
     loadGallery();
   }, []);
 
-  const loadGallery = () => {
-    setItems(dataService.getGallery());
+  const loadGallery = async () => {
+    setLoading(true);
+    const data = await dataService.getGallery();
+    setItems(data);
+    setLoading(false);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Apakah Anda yakin ingin menghapus foto galeri ini?')) {
-      dataService.deleteGalleryItem(id);
-      loadGallery();
+      setLoading(true);
+      await dataService.deleteGalleryItem(id);
+      await loadGallery();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newItem.title || !newItem.image) return;
 
-    dataService.saveGalleryItem({
+    setLoading(true);
+    await dataService.saveGalleryItem({
       title: newItem.title || '',
       category: newItem.category || 'Penghijauan',
       year: newItem.year || '2025',
@@ -50,7 +56,7 @@ export default function AdminGaleriPage() {
       year: new Date().getFullYear().toString(),
       image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
     });
-    loadGallery();
+    await loadGallery();
   };
 
   return (
@@ -164,55 +170,65 @@ export default function AdminGaleriPage() {
                 </Button>
                 <Button
                   type="submit"
+                  disabled={loading}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md"
                 >
-                  Simpan & Publikasikan
+                  {loading ? 'Menyimpan...' : 'Simpan & Publikasikan'}
                 </Button>
               </div>
             </form>
           </Card>
         ) : (
           /* Gallery Grid */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-all"
-              >
-                <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <span className="absolute top-3 left-3 bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow">
-                    {item.category}
-                  </span>
-                  <span className="absolute top-3 right-3 bg-black/60 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur">
-                    {item.year}
-                  </span>
-                </div>
-
-                <div className="p-4 flex items-center justify-between gap-3 border-t border-gray-100 bg-white">
-                  <h3 className="font-bold text-gray-900 text-sm truncate flex-1">{item.title}</h3>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleDelete(item.id)}
-                    className="text-red-600 border-red-200 hover:bg-red-50 p-2 rounded-lg"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
+          <div>
+            {loading ? (
+              <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+                <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-gray-500 text-sm font-medium">Memuat data galeri...</p>
               </div>
-            ))}
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col group hover:shadow-md transition-all"
+                  >
+                    <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute top-3 left-3 bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow">
+                        {item.category}
+                      </span>
+                      <span className="absolute top-3 right-3 bg-black/60 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur">
+                        {item.year}
+                      </span>
+                    </div>
 
-            {items.length === 0 && (
-              <div className="col-span-full bg-white p-12 rounded-2xl border border-dashed border-gray-300 text-center">
-                <p className="text-gray-500 font-medium">Belum ada foto di galeri.</p>
-                <Button onClick={() => setIsEditing(true)} className="mt-4 bg-emerald-600 text-white">
-                  Upload Foto Pertama
-                </Button>
+                    <div className="p-4 flex items-center justify-between gap-3 border-t border-gray-100 bg-white">
+                      <h3 className="font-bold text-gray-900 text-sm truncate flex-1">{item.title}</h3>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDelete(item.id)}
+                        className="text-red-600 border-red-200 hover:bg-red-50 p-2 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+
+                {items.length === 0 && (
+                  <div className="col-span-full bg-white p-12 rounded-2xl border border-dashed border-gray-300 text-center">
+                    <p className="text-gray-500 font-medium">Belum ada foto di galeri.</p>
+                    <Button onClick={() => setIsEditing(true)} className="mt-4 bg-emerald-600 text-white">
+                      Upload Foto Pertama
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -9,6 +9,7 @@ import { Plus, Edit2, Trash2, Newspaper, ArrowLeft, Image as ImageIcon } from 'l
 
 export default function AdminBeritaPage() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [currentArticle, setCurrentArticle] = useState<Partial<Article>>({
     title: '',
@@ -22,8 +23,11 @@ export default function AdminBeritaPage() {
     loadArticles();
   }, []);
 
-  const loadArticles = () => {
-    setArticles(dataService.getArticles());
+  const loadArticles = async () => {
+    setLoading(true);
+    const data = await dataService.getArticles();
+    setArticles(data);
+    setLoading(false);
   };
 
   const handleCreateNew = () => {
@@ -42,18 +46,20 @@ export default function AdminBeritaPage() {
     setIsEditing(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Apakah Anda yakin ingin menghapus artikel berita ini?')) {
-      dataService.deleteArticle(id);
-      loadArticles();
+      setLoading(true);
+      await dataService.deleteArticle(id);
+      await loadArticles();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentArticle.title || !currentArticle.excerpt) return;
 
-    dataService.saveArticle({
+    setLoading(true);
+    await dataService.saveArticle({
       id: currentArticle.id,
       title: currentArticle.title || '',
       excerpt: currentArticle.excerpt || '',
@@ -64,7 +70,7 @@ export default function AdminBeritaPage() {
     });
 
     setIsEditing(false);
-    loadArticles();
+    await loadArticles();
   };
 
   return (
@@ -196,69 +202,79 @@ export default function AdminBeritaPage() {
                 </Button>
                 <Button
                   type="submit"
+                  disabled={loading}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md"
                 >
-                  Simpan & Publish
+                  {loading ? 'Menyimpan...' : 'Simpan & Publish'}
                 </Button>
               </div>
             </form>
           </Card>
         ) : (
           /* Articles List Table / Grid */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map((article) => (
-              <div
-                key={article.id}
-                className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-all group"
-              >
-                <div className="h-44 bg-gray-100 relative overflow-hidden">
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <span className="absolute top-3 left-3 bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow">
-                    {article.category}
-                  </span>
-                </div>
+          <div>
+            {loading ? (
+              <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+                <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-gray-500 text-sm font-medium">Memuat data berita...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {articles.map((article) => (
+                  <div
+                    key={article.id}
+                    className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-all group"
+                  >
+                    <div className="h-44 bg-gray-100 relative overflow-hidden">
+                      <img
+                        src={article.image}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute top-3 left-3 bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow">
+                        {article.category}
+                      </span>
+                    </div>
 
-                <div className="p-5 flex flex-col flex-1">
-                  <p className="text-xs text-gray-400 mb-2">{article.date}</p>
-                  <h3 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 leading-snug">
-                    {article.title}
-                  </h3>
-                  <p className="text-gray-500 text-xs line-clamp-3 mb-4 flex-1">
-                    {article.excerpt}
-                  </p>
+                    <div className="p-5 flex flex-col flex-1">
+                      <p className="text-xs text-gray-400 mb-2">{article.date}</p>
+                      <h3 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 leading-snug">
+                        {article.title}
+                      </h3>
+                      <p className="text-gray-500 text-xs line-clamp-3 mb-4 flex-1">
+                        {article.excerpt}
+                      </p>
 
-                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100 mt-auto">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleEdit(article)}
-                      className="text-emerald-700 border-emerald-200 hover:bg-emerald-50 text-xs flex items-center gap-1.5 rounded-lg"
-                    >
-                      <Edit2 className="w-3.5 h-3.5" /> Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleDelete(article.id)}
-                      className="text-red-600 border-red-200 hover:bg-red-50 text-xs flex items-center gap-1.5 rounded-lg"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" /> Hapus
+                      <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100 mt-auto">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(article)}
+                          className="text-emerald-700 border-emerald-200 hover:bg-emerald-50 text-xs flex items-center gap-1.5 rounded-lg"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" /> Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDelete(article.id)}
+                          className="text-red-600 border-red-200 hover:bg-red-50 text-xs flex items-center gap-1.5 rounded-lg"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" /> Hapus
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {articles.length === 0 && (
+                  <div className="col-span-full bg-white p-12 rounded-2xl border border-dashed border-gray-300 text-center">
+                    <p className="text-gray-500 font-medium">Belum ada artikel berita.</p>
+                    <Button onClick={handleCreateNew} className="mt-4 bg-emerald-600 text-white">
+                      Buat Berita Pertama
                     </Button>
                   </div>
-                </div>
-              </div>
-            ))}
-
-            {articles.length === 0 && (
-              <div className="col-span-full bg-white p-12 rounded-2xl border border-dashed border-gray-300 text-center">
-                <p className="text-gray-500 font-medium">Belum ada artikel berita.</p>
-                <Button onClick={handleCreateNew} className="mt-4 bg-emerald-600 text-white">
-                  Buat Berita Pertama
-                </Button>
+                )}
               </div>
             )}
           </div>

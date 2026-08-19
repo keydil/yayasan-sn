@@ -9,10 +9,18 @@ export default function GaleriPage() {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [selectedYear, setSelectedYear] = useState('Semua');
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setGalleryItems(dataService.getGallery());
+    loadGallery();
   }, []);
+
+  const loadGallery = async () => {
+    setLoading(true);
+    const data = await dataService.getGallery();
+    setGalleryItems(data);
+    setLoading(false);
+  };
 
   const years = ['Semua', ...Array.from(new Set(galleryItems.map((item) => item.year)))];
 
@@ -57,40 +65,46 @@ export default function GaleriPage() {
             ))}
           </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((item) => (
-              <Card
-                key={item.id}
-                className="overflow-hidden border-0 bg-white group cursor-pointer hover:shadow-lg transition-shadow rounded-2xl"
-                onClick={() => setSelectedItem(item)}
-              >
-                <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-emerald-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
-                      <ZoomIn className="w-8 h-8 text-white" />
+          {loading ? (
+            <div className="text-center py-16">
+              <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-gray-500 text-sm font-medium">Memuat foto galeri dari database...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredItems.map((item) => (
+                <Card
+                  key={item.id}
+                  className="overflow-hidden border-0 bg-white group cursor-pointer hover:shadow-lg transition-shadow rounded-2xl"
+                  onClick={() => setSelectedItem(item)}
+                >
+                  <div className="aspect-[4/3] bg-gray-200 relative overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-emerald-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                        <ZoomIn className="w-8 h-8 text-white" />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="p-4 sm:p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-                      {item.category}
-                    </span>
-                    <span className="text-xs text-gray-500">{item.year}</span>
+                  <div className="p-4 sm:p-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                        {item.category}
+                      </span>
+                      <span className="text-xs text-gray-500">{item.year}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{item.title}</h3>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{item.title}</h3>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
+          )}
 
-          {filteredItems.length === 0 && (
+          {!loading && filteredItems.length === 0 && (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
               <ImageIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500 font-medium">Belum ada foto galeri.</p>

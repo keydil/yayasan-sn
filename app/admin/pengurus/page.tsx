@@ -9,6 +9,7 @@ import { Users, Plus, Edit2, Trash2, ArrowLeft } from 'lucide-react';
 
 export default function AdminPengurusPage() {
   const [list, setList] = useState<PengurusItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [currentItem, setCurrentItem] = useState<Partial<PengurusItem>>({
     name: '',
@@ -20,8 +21,11 @@ export default function AdminPengurusPage() {
     loadPengurus();
   }, []);
 
-  const loadPengurus = () => {
-    setList(dataService.getPengurus());
+  const loadPengurus = async () => {
+    setLoading(true);
+    const data = await dataService.getPengurus();
+    setList(data);
+    setLoading(false);
   };
 
   const handleEdit = (item: PengurusItem) => {
@@ -29,18 +33,20 @@ export default function AdminPengurusPage() {
     setIsEditing(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Apakah Anda yakin ingin menghapus data pengurus ini?')) {
-      dataService.deletePengurus(id);
-      loadPengurus();
+      setLoading(true);
+      await dataService.deletePengurus(id);
+      await loadPengurus();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentItem.name || !currentItem.role) return;
 
-    dataService.savePengurus({
+    setLoading(true);
+    await dataService.savePengurus({
       id: currentItem.id,
       name: currentItem.name || '',
       role: currentItem.role || '',
@@ -49,7 +55,7 @@ export default function AdminPengurusPage() {
 
     setIsEditing(false);
     setCurrentItem({ name: '', role: '', tier: 'pengurus' });
-    loadPengurus();
+    await loadPengurus();
   };
 
   const getTierBadge = (tier: string) => {
@@ -164,9 +170,10 @@ export default function AdminPengurusPage() {
                 </Button>
                 <Button
                   type="submit"
+                  disabled={loading}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md"
                 >
-                  Simpan Perubahan
+                  {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
                 </Button>
               </div>
             </form>
@@ -177,47 +184,54 @@ export default function AdminPengurusPage() {
             <div className="p-6 border-b border-gray-100 flex items-center justify-between">
               <h3 className="font-bold text-gray-900 text-lg">Daftar Pengurus Terdaftar ({list.length})</h3>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-gray-50 text-xs font-bold text-gray-500 uppercase border-b border-gray-200">
-                    <th className="p-4 pl-6">Nama Lengkap</th>
-                    <th className="p-4">Jabatan</th>
-                    <th className="p-4">Tingkat</th>
-                    <th className="p-4 pr-6 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 text-sm">
-                  {list.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="p-4 pl-6 font-bold text-gray-900">{item.name}</td>
-                      <td className="p-4 text-gray-600 font-medium">{item.role}</td>
-                      <td className="p-4">{getTierBadge(item.tier)}</td>
-                      <td className="p-4 pr-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleEdit(item)}
-                            className="text-emerald-700 border-emerald-200 hover:bg-emerald-50 text-xs p-2 rounded-lg"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleDelete(item.id)}
-                            className="text-red-600 border-red-200 hover:bg-red-50 text-xs p-2 rounded-lg"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
-                        </div>
-                      </td>
+            {loading ? (
+              <div className="text-center py-16">
+                <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-gray-500 text-sm font-medium">Memuat data pengurus...</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50 text-xs font-bold text-gray-500 uppercase border-b border-gray-200">
+                      <th className="p-4 pl-6">Nama Lengkap</th>
+                      <th className="p-4">Jabatan</th>
+                      <th className="p-4">Tingkat</th>
+                      <th className="p-4 pr-6 text-right">Aksi</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 text-sm">
+                    {list.map((item) => (
+                      <tr key={item.id} className="hover:bg-gray-50/80 transition-colors">
+                        <td className="p-4 pl-6 font-bold text-gray-900">{item.name}</td>
+                        <td className="p-4 text-gray-600 font-medium">{item.role}</td>
+                        <td className="p-4">{getTierBadge(item.tier)}</td>
+                        <td className="p-4 pr-6 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleEdit(item)}
+                              className="text-emerald-700 border-emerald-200 hover:bg-emerald-50 text-xs p-2 rounded-lg"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleDelete(item.id)}
+                              className="text-red-600 border-red-200 hover:bg-red-50 text-xs p-2 rounded-lg"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </div>

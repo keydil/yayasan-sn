@@ -35,10 +35,18 @@ const coreValues = [
 
 export default function TentangPage() {
   const [officers, setOfficers] = useState<PengurusItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setOfficers(dataService.getPengurus());
+    loadPengurus();
   }, []);
+
+  const loadPengurus = async () => {
+    setLoading(true);
+    const data = await dataService.getPengurus();
+    setOfficers(data);
+    setLoading(false);
+  };
 
   const pembina = officers.filter((o) => o.tier === 'pembina');
   const pengawas = officers.filter((o) => o.tier === 'pengawas');
@@ -153,83 +161,90 @@ export default function TentangPage() {
             <p className="text-gray-500 mt-3 max-w-xl mx-auto">Individu-individu berdedikasi yang menggerakkan misi Yayasan Sahabat Nusantara.</p>
           </div>
 
-          <div className="space-y-10">
-            {/* Tier: Pembina */}
-            {pembina.length > 0 && (
-              <div>
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="w-3 h-3 rounded-full bg-amber-500" />
-                  <h3 className="text-lg font-bold text-gray-800 tracking-wide uppercase text-sm">Pembina</h3>
-                  <div className="flex-1 h-px bg-gray-200" />
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-gray-500 text-sm font-medium">Memuat struktur organisasi...</p>
+            </div>
+          ) : (
+            <div className="space-y-10">
+              {/* Tier: Pembina */}
+              {pembina.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="w-3 h-3 rounded-full bg-amber-500" />
+                    <h3 className="text-lg font-bold text-gray-800 tracking-wide uppercase text-sm">Pembina</h3>
+                    <div className="flex-1 h-px bg-gray-200" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {pembina.map((p) => (
+                      <div key={p.id} className="bg-amber-50 border border-amber-100 rounded-xl px-5 py-4">
+                        <p className="font-bold text-gray-900">{p.name}</p>
+                        <p className="text-amber-700 text-sm font-medium mt-1">{p.role}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {pembina.map((p) => (
-                    <div key={p.id} className="bg-amber-50 border border-amber-100 rounded-xl px-5 py-4">
-                      <p className="font-bold text-gray-900">{p.name}</p>
-                      <p className="text-amber-700 text-sm font-medium mt-1">{p.role}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              )}
 
-            {/* Tier: Pengawas */}
-            {pengawas.length > 0 && (
-              <div>
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="w-3 h-3 rounded-full bg-blue-500" />
-                  <h3 className="text-lg font-bold text-gray-800 tracking-wide uppercase text-sm">Pengawas</h3>
-                  <div className="flex-1 h-px bg-gray-200" />
+              {/* Tier: Pengawas */}
+              {pengawas.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="w-3 h-3 rounded-full bg-blue-500" />
+                    <h3 className="text-lg font-bold text-gray-800 tracking-wide uppercase text-sm">Pengawas</h3>
+                    <div className="flex-1 h-px bg-gray-200" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {pengawas.map((p) => (
+                      <div key={p.id} className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-4">
+                        <p className="font-bold text-gray-900">{p.name}</p>
+                        <p className="text-blue-700 text-sm font-medium mt-1">{p.role}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {pengawas.map((p) => (
-                    <div key={p.id} className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-4">
-                      <p className="font-bold text-gray-900">{p.name}</p>
-                      <p className="text-blue-700 text-sm font-medium mt-1">{p.role}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              )}
 
-            {/* Tier: Pengurus */}
-            {pengurus.length > 0 && (
-              <div>
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="w-3 h-3 rounded-full bg-emerald-600" />
-                  <h3 className="text-lg font-bold text-gray-800 tracking-wide uppercase text-sm">Pengurus</h3>
-                  <div className="flex-1 h-px bg-gray-200" />
+              {/* Tier: Pengurus */}
+              {pengurus.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="w-3 h-3 rounded-full bg-emerald-600" />
+                    <h3 className="text-lg font-bold text-gray-800 tracking-wide uppercase text-sm">Pengurus</h3>
+                    <div className="flex-1 h-px bg-gray-200" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {pengurus.map((p) => (
+                      <div key={p.id} className="bg-emerald-50 border border-emerald-100 rounded-xl px-5 py-4">
+                        <p className="font-bold text-gray-900">{p.name}</p>
+                        <p className="text-emerald-700 text-sm font-medium mt-1">{p.role}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {pengurus.map((p) => (
-                    <div key={p.id} className="bg-emerald-50 border border-emerald-100 rounded-xl px-5 py-4">
-                      <p className="font-bold text-gray-900">{p.name}</p>
-                      <p className="text-emerald-700 text-sm font-medium mt-1">{p.role}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              )}
 
-            {/* Tier: Pelaksana Harian */}
-            {pelaksanaHarian.length > 0 && (
-              <div>
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="w-3 h-3 rounded-full bg-gray-500" />
-                  <h3 className="text-lg font-bold text-gray-800 tracking-wide uppercase text-sm">Pelaksana Harian</h3>
-                  <div className="flex-1 h-px bg-gray-200" />
+              {/* Tier: Pelaksana Harian */}
+              {pelaksanaHarian.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="w-3 h-3 rounded-full bg-gray-500" />
+                    <h3 className="text-lg font-bold text-gray-800 tracking-wide uppercase text-sm">Pelaksana Harian</h3>
+                    <div className="flex-1 h-px bg-gray-200" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {pelaksanaHarian.map((p) => (
+                      <div key={p.id} className="bg-gray-50 border border-gray-200 rounded-xl px-5 py-4">
+                        <p className="font-bold text-gray-900">{p.name}</p>
+                        <p className="text-gray-500 text-sm font-medium mt-1">{p.role}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {pelaksanaHarian.map((p) => (
-                    <div key={p.id} className="bg-gray-50 border border-gray-200 rounded-xl px-5 py-4">
-                      <p className="font-bold text-gray-900">{p.name}</p>
-                      <p className="text-gray-500 text-sm font-medium mt-1">{p.role}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
