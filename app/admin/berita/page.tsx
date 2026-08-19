@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { dataService, Article } from '@/lib/supabase';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { MultiImageUpload } from '@/components/ui/multi-image-upload';
+import { VideoUpload } from '@/components/ui/video-upload';
 import { Plus, Edit2, Trash2, Newspaper, ArrowLeft, Image as ImageIcon, Video } from 'lucide-react';
 
 export default function AdminBeritaPage() {
@@ -166,19 +167,11 @@ export default function AdminBeritaPage() {
               />
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                  Link Video Dokumentasi (YouTube / Google Drive URL) <span className="text-gray-400 font-normal">(Opsional)</span>
-                </label>
-                <div className="relative">
-                  <Video className="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="url"
-                    value={currentArticle.videoUrl || ''}
-                    onChange={(e) => setCurrentArticle({ ...currentArticle, videoUrl: e.target.value })}
-                    placeholder="Contoh: https://drive.google.com/file/d/... atau https://youtu.be/..."
-                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-medium"
-                  />
-                </div>
+                <VideoUpload
+                  value={currentArticle.videoUrl || ''}
+                  onChange={(val) => setCurrentArticle({ ...currentArticle, videoUrl: val })}
+                  label="Video Dokumentasi Kegiatan"
+                />
               </div>
 
               <div>
