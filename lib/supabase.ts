@@ -119,19 +119,58 @@ function setStore<T>(key: string, value: T): void {
   }
 }
 
-// Data Service API (Dual-Engine: Supabase Cloud DB Primary with Local Storage Fallback)
+// Data Service API (Dual-Engine: Supabase Cloud DB Primary with Smart Auto-Upload & Fallback)
 export const dataService = {
   // --- ARTICLES ---
   getArticles: async (): Promise<Article[]> => {
+    const localArticles = getStore(STORAGE_KEYS.ARTICLES, initialArticles);
+
     try {
       if (supabaseUrl && supabaseAnonKey) {
         const { data, error } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
         if (!error && data) {
+          // Check if local storage has custom articles (IDs not 1, 2, 3) that are missing in Supabase
+          const customLocal = localArticles.filter((a) => !['1', '2', '3'].includes(a.id));
+          if (customLocal.length > 0) {
+            let uploadedAny = false;
+            for (const item of customLocal) {
+              const exists = data.some((d: any) => d.title === item.title);
+              if (!exists) {
+                await supabase.from('articles').insert([{
+                  title: item.title,
+                  excerpt: item.excerpt,
+                  content: item.content || item.excerpt,
+                  category: item.category,
+                  date: item.date,
+                  image: item.image,
+                }]);
+                uploadedAny = true;
+              }
+            }
+            if (uploadedAny) {
+              const { data: updatedData } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
+              if (updatedData && updatedData.length > 0) {
+                const mapped: Article[] = updatedData.map((item: any) => ({
+                  id: String(item.id),
+                  title: item.title,
+                  excerpt: item.excerpt,
+                  content: item.content || '',
+                  category: item.category,
+                  date: item.date,
+                  image: item.image,
+                }));
+                setStore(STORAGE_KEYS.ARTICLES, mapped);
+                return mapped;
+              }
+            }
+          }
+
           if (data.length === 0) {
-            // Auto seed to Supabase if empty
+            // Auto seed initial to Supabase
             await supabase.from('articles').insert(initialArticles);
             return initialArticles;
           }
+
           const mapped: Article[] = data.map((item: any) => ({
             id: String(item.id),
             title: item.title,
@@ -148,7 +187,7 @@ export const dataService = {
     } catch (err) {
       console.warn('Supabase fetch articles fallback to local storage:', err);
     }
-    return getStore(STORAGE_KEYS.ARTICLES, initialArticles);
+    return localArticles;
   },
 
   getArticleById: async (id: string): Promise<Article | undefined> => {
@@ -189,7 +228,7 @@ export const dataService = {
     try {
       if (supabaseUrl && supabaseAnonKey) {
         if (article.id && !isNaN(Number(article.id))) {
-          // Exists in Supabase DB
+          // Update existing DB row
           await supabase.from('articles').update({
             title: article.title,
             excerpt: article.excerpt,
@@ -199,7 +238,7 @@ export const dataService = {
             image: article.image,
           }).eq('id', article.id);
         } else {
-          // Create new record in Supabase
+          // Insert new DB row
           const { data, error } = await supabase.from('articles').insert([{
             title: article.title,
             excerpt: article.excerpt,
@@ -249,10 +288,42 @@ export const dataService = {
 
   // --- GALLERY ---
   getGallery: async (): Promise<GalleryItem[]> => {
+    const localGallery = getStore(STORAGE_KEYS.GALLERY, initialGallery);
     try {
       if (supabaseUrl && supabaseAnonKey) {
         const { data, error } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
         if (!error && data) {
+          const customLocal = localGallery.filter((g) => !['1', '2', '3', '4', '5', '6'].includes(g.id));
+          if (customLocal.length > 0) {
+            let uploadedAny = false;
+            for (const item of customLocal) {
+              const exists = data.some((d: any) => d.title === item.title);
+              if (!exists) {
+                await supabase.from('gallery').insert([{
+                  title: item.title,
+                  category: item.category,
+                  year: item.year,
+                  image: item.image,
+                }]);
+                uploadedAny = true;
+              }
+            }
+            if (uploadedAny) {
+              const { data: updatedData } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
+              if (updatedData && updatedData.length > 0) {
+                const mapped: GalleryItem[] = updatedData.map((item: any) => ({
+                  id: String(item.id),
+                  title: item.title,
+                  category: item.category,
+                  year: item.year,
+                  image: item.image,
+                }));
+                setStore(STORAGE_KEYS.GALLERY, mapped);
+                return mapped;
+              }
+            }
+          }
+
           if (data.length === 0) {
             await supabase.from('gallery').insert(initialGallery);
             return initialGallery;
@@ -271,7 +342,7 @@ export const dataService = {
     } catch (err) {
       console.warn('Supabase fetch gallery fallback:', err);
     }
-    return getStore(STORAGE_KEYS.GALLERY, initialGallery);
+    return localGallery;
   },
 
   saveGalleryItem: async (item: Omit<GalleryItem, 'id'> & { id?: string }): Promise<GalleryItem> => {
@@ -339,6 +410,7 @@ export const dataService = {
 
   // --- PENGURUS ---
   getPengurus: async (): Promise<PengurusItem[]> => {
+    const localList = getStore(STORAGE_KEYS.PENGURUS, initialPengurus);
     try {
       if (supabaseUrl && supabaseAnonKey) {
         const { data, error } = await supabase.from('pengurus').select('*').order('created_at', { ascending: true });
@@ -360,7 +432,7 @@ export const dataService = {
     } catch (err) {
       console.warn('Supabase fetch pengurus fallback:', err);
     }
-    return getStore(STORAGE_KEYS.PENGURUS, initialPengurus);
+    return localList;
   },
 
   savePengurus: async (item: Omit<PengurusItem, 'id'> & { id?: string }): Promise<PengurusItem> => {
