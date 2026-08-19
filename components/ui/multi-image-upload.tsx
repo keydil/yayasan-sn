@@ -111,10 +111,10 @@ export function MultiImageUpload({ value = [], onChange, label = 'Dokumentasi Fo
             <button
               type="button"
               onClick={() => handleRemove(idx)}
-              className="absolute top-1.5 right-1.5 bg-red-600/90 text-white p-1.5 rounded-full shadow hover:bg-red-700 transition-all opacity-90 sm:opacity-0 group-hover:opacity-100"
+              className="absolute top-1.5 right-1.5 bg-red-600 text-white p-1.5 rounded-full shadow-lg hover:bg-red-700 hover:scale-110 active:scale-95 transition-all z-10"
               title="Hapus foto ini"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4 stroke-[2.5]" />
             </button>
             <span className="absolute bottom-1.5 left-1.5 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">
               #{idx + 1}

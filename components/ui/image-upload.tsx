@@ -125,10 +125,10 @@ export function ImageUpload({ value, onChange, label = 'Foto / Gambar Header' }:
           <button
             type="button"
             onClick={handleClear}
-            className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition-transform group-hover:scale-110 flex items-center justify-center"
+            className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 hover:scale-110 active:scale-95 transition-all z-10"
             title="Hapus foto"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5 stroke-[2.5]" />
           </button>
           {isUploading && (
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white text-sm font-semibold">

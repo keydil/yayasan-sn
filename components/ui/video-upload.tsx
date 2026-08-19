@@ -115,10 +115,10 @@ export function VideoUpload({ value, onChange, label = 'Link / File Video Dokume
           <button
             type="button"
             onClick={handleClear}
-            className="p-2 rounded-lg bg-gray-800 hover:bg-red-600 text-gray-400 hover:text-white transition-colors shrink-0"
+            className="p-2 rounded-xl bg-red-600 text-white hover:bg-red-700 active:scale-95 transition-all shrink-0 shadow-md flex items-center justify-center"
             title="Hapus Video"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 stroke-[2.5]" />
           </button>
         </div>
       ) : (
