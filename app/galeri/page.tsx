@@ -5,12 +5,25 @@ import { useState, useEffect, useCallback } from 'react';
 import { X, ZoomIn, Image as ImageIcon, ChevronLeft, ChevronRight, Images, Video } from 'lucide-react';
 import { dataService, GalleryItem } from '@/lib/supabase';
 
-function getYouTubeEmbedUrl(url?: string): string | null {
+function getVideoEmbedData(url?: string): { type: 'iframe' | 'video'; url: string } | null {
   if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  if (match && match[2].length === 11) {
-    return `https://www.youtube.com/embed/${match[2]}`;
+  const gdrive1 = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
+  if (gdrive1 && gdrive1[1]) {
+    return { type: 'iframe', url: `https://drive.google.com/file/d/${gdrive1[1]}/preview` };
+  }
+  const gdrive2 = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+  if (gdrive2 && gdrive2[1]) {
+    return { type: 'iframe', url: `https://drive.google.com/file/d/${gdrive2[1]}/preview` };
+  }
+  const ytMatch = url.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*)/);
+  if (ytMatch && ytMatch[1] && ytMatch[1].length === 11) {
+    return { type: 'iframe', url: `https://www.youtube.com/embed/${ytMatch[1]}` };
+  }
+  if (url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
+    return { type: 'video', url };
+  }
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return { type: 'iframe', url };
   }
   return null;
 }
@@ -239,20 +252,24 @@ export default function GaleriPage() {
             <div className="p-5 bg-white border-t border-gray-100 space-y-4">
               <h3 className="text-xl font-bold text-gray-900">{selectedItem.title}</h3>
 
-              {/* YouTube Video Player Embed if present */}
-              {selectedItem.videoUrl && getYouTubeEmbedUrl(selectedItem.videoUrl) && (
+              {/* Video Player Embed if present */}
+              {selectedItem.videoUrl && getVideoEmbedData(selectedItem.videoUrl) && (
                 <div className="pt-3 border-t border-gray-100">
                   <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-wider mb-2">
                     <Video className="w-4 h-4" /> Video Dokumentasi
                   </div>
                   <div className="aspect-video w-full rounded-xl overflow-hidden bg-black shadow">
-                    <iframe
-                      src={getYouTubeEmbedUrl(selectedItem.videoUrl)!}
-                      title="Video Dokumentasi Galeri"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="w-full h-full border-0"
-                    />
+                    {getVideoEmbedData(selectedItem.videoUrl)!.type === 'iframe' ? (
+                      <iframe
+                        src={getVideoEmbedData(selectedItem.videoUrl)!.url}
+                        title="Video Dokumentasi Galeri"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full border-0"
+                      />
+                    ) : (
+                      <video src={getVideoEmbedData(selectedItem.videoUrl)!.url} controls className="w-full h-full object-contain" />
+                    )}
                   </div>
                 </div>
               )}

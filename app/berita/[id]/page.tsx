@@ -5,12 +5,25 @@ import Link from 'next/link';
 import { ArrowLeft, Calendar, Tag, Video, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 import { dataService, Article } from '@/lib/supabase';
 
-function getYouTubeEmbedUrl(url?: string): string | null {
+function getVideoEmbedData(url?: string): { type: 'iframe' | 'video'; url: string } | null {
   if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  if (match && match[2].length === 11) {
-    return `https://www.youtube.com/embed/${match[2]}`;
+  const gdrive1 = url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
+  if (gdrive1 && gdrive1[1]) {
+    return { type: 'iframe', url: `https://drive.google.com/file/d/${gdrive1[1]}/preview` };
+  }
+  const gdrive2 = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+  if (gdrive2 && gdrive2[1]) {
+    return { type: 'iframe', url: `https://drive.google.com/file/d/${gdrive2[1]}/preview` };
+  }
+  const ytMatch = url.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*)/);
+  if (ytMatch && ytMatch[1] && ytMatch[1].length === 11) {
+    return { type: 'iframe', url: `https://www.youtube.com/embed/${ytMatch[1]}` };
+  }
+  if (url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
+    return { type: 'video', url };
+  }
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return { type: 'iframe', url };
   }
   return null;
 }
@@ -214,7 +227,7 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
     );
   }
 
-  const embedVideoUrl = getYouTubeEmbedUrl(article.videoUrl);
+  const videoData = getVideoEmbedData(article.videoUrl);
 
   // Combine cover image and extra images into ONE list for top carousel
   const allPhotos = Array.from(
@@ -257,20 +270,24 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
           {article.content}
         </div>
 
-        {/* Video Embed Section (If Available) */}
-        {embedVideoUrl && (
+        {/* Video Embed Section (YouTube / Google Drive / MP4) */}
+        {videoData && (
           <div className="mb-12 bg-gray-900 rounded-3xl p-4 sm:p-6 shadow-xl border border-gray-800">
             <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase tracking-wider mb-4">
               <Video className="w-5 h-5 text-emerald-400" /> Dokumentasi Video Kegiatan
             </div>
             <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black">
-              <iframe
-                src={embedVideoUrl}
-                title="Dokumentasi Video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full border-0"
-              />
+              {videoData.type === 'iframe' ? (
+                <iframe
+                  src={videoData.url}
+                  title="Dokumentasi Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full border-0"
+                />
+              ) : (
+                <video src={videoData.url} controls className="w-full h-full object-contain" />
+              )}
             </div>
           </div>
         )}
