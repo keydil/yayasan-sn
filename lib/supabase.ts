@@ -40,6 +40,7 @@ export const uploadImageToSupabase = async (file: File, folder = 'uploads'): Pro
 // Data types
 export interface Article {
   id: string;
+  slug?: string;
   title: string;
   excerpt: string;
   content: string;
@@ -48,6 +49,17 @@ export interface Article {
   image: string;
   images?: string[];
   videoUrl?: string;
+}
+
+export function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove diacritics
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .substring(0, 80);
 }
 
 export interface GalleryItem {
@@ -170,6 +182,7 @@ export const dataService = {
         if (!error && data && data.length > 0) {
           const mapped: Article[] = data.map((item: any) => ({
             id: String(item.id),
+            slug: item.slug || '',
             title: item.title,
             excerpt: item.excerpt,
             content: item.content || '',
@@ -189,29 +202,33 @@ export const dataService = {
     return localArticles;
   },
 
-  getArticleById: async (id: string): Promise<Article | undefined> => {
+  getArticleById: async (idOrSlug: string): Promise<Article | undefined> => {
+    const mapRow = (data: any): Article => ({
+      id: String(data.id),
+      slug: data.slug || '',
+      title: data.title,
+      excerpt: data.excerpt,
+      content: data.content || '',
+      category: data.category,
+      date: data.date,
+      image: data.image,
+      images: Array.isArray(data.images) ? data.images : (typeof data.images === 'string' && data.images.startsWith('[') ? JSON.parse(data.images) : []),
+      videoUrl: data.videoUrl || data.video_url || '',
+    });
     try {
       if (supabaseUrl && supabaseAnonKey) {
-        const { data, error } = await supabase.from('articles').select('*').eq('id', id).single();
-        if (!error && data) {
-          return {
-            id: String(data.id),
-            title: data.title,
-            excerpt: data.excerpt,
-            content: data.content || '',
-            category: data.category,
-            date: data.date,
-            image: data.image,
-            images: Array.isArray(data.images) ? data.images : (typeof data.images === 'string' && data.images.startsWith('[') ? JSON.parse(data.images) : []),
-            videoUrl: data.videoUrl || data.video_url || '',
-          };
-        }
+        // Try by UUID id first
+        const byId = await supabase.from('articles').select('*').eq('id', idOrSlug).maybeSingle();
+        if (!byId.error && byId.data) return mapRow(byId.data);
+        // Then try by slug
+        const bySlug = await supabase.from('articles').select('*').eq('slug', idOrSlug).maybeSingle();
+        if (!bySlug.error && bySlug.data) return mapRow(bySlug.data);
       }
     } catch (err) {
-      console.warn('Supabase fetch article by id fallback:', err);
+      console.warn('Supabase fetch article by id/slug fallback:', err);
     }
     const articles = await dataService.getArticles();
-    return articles.find((a) => a.id === id);
+    return articles.find((a) => a.id === idOrSlug || a.slug === idOrSlug);
   },
 
   saveArticle: async (article: Omit<Article, 'id'> & { id?: string }): Promise<Article> => {
@@ -230,6 +247,9 @@ export const dataService = {
 
     try {
       if (supabaseUrl && supabaseAnonKey) {
+        const slug = (article as any).slug || generateSlug(article.title);
+        savedItem.slug = slug;
+
         const basePayload: any = {
           title: article.title,
           excerpt: article.excerpt,
@@ -237,6 +257,7 @@ export const dataService = {
           category: article.category,
           date: formattedDate,
           image: article.image,
+          slug,
         };
 
         const fullPayload: any = {

@@ -50,7 +50,7 @@ export default function BeritaPage() {
               {articles.map((article) => (
                 <Link
                   key={article.id}
-                  href={`/berita/${article.id}`}
+                  href={`/berita/${article.slug || article.id}`}
                   className="group block bg-white rounded-2xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden flex flex-col h-full"
                 >
                   <div className="h-48 bg-gray-200 relative overflow-hidden shrink-0">
