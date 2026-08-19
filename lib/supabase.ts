@@ -155,7 +155,6 @@ function setStore<T>(key: string, value: T): void {
 
 // Data Service API (Dual-Engine: Supabase Cloud DB Primary with Smart Auto-Upload & Fallback)
 export const dataService = {
-  // --- ARTICLES ---
   getArticles: async (): Promise<Article[]> => {
     const localArticles = getStore(STORAGE_KEYS.ARTICLES, initialArticles);
 
@@ -163,56 +162,12 @@ export const dataService = {
       if (supabaseUrl && supabaseAnonKey) {
         let { data, error } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
         if (error) {
-          console.warn('[Supabase Warning] order by created_at failed, retrying plain select:', error.message);
           const res = await supabase.from('articles').select('*');
           data = res.data;
           error = res.error;
         }
 
-        if (!error && data) {
-          // Check if local storage has custom articles (IDs not 1, 2, 3) that are missing in Supabase
-          const customLocal = localArticles.filter((a) => !['1', '2', '3'].includes(a.id));
-          if (customLocal.length > 0) {
-            let uploadedAny = false;
-            for (const item of customLocal) {
-              const exists = data.some((d: any) => d.title === item.title);
-              if (!exists) {
-                await supabase.from('articles').insert([{
-                  title: item.title,
-                  excerpt: item.excerpt,
-                  content: item.content || item.excerpt,
-                  category: item.category,
-                  date: item.date,
-                  image: item.image,
-                }]);
-                uploadedAny = true;
-              }
-            }
-            if (uploadedAny) {
-              const { data: updatedData } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
-              if (updatedData && updatedData.length > 0) {
-                const mapped: Article[] = updatedData.map((item: any) => ({
-                  id: String(item.id),
-                  title: item.title,
-                  excerpt: item.excerpt,
-                  content: item.content || '',
-                  category: item.category,
-                  date: item.date,
-                  image: item.image,
-                }));
-                setStore(STORAGE_KEYS.ARTICLES, mapped);
-                return mapped;
-              }
-            }
-          }
-
-          if (data.length === 0) {
-            // Seed without IDs so Supabase generates UUIDs
-            const seedPayload = initialArticles.map(({ id, ...rest }) => rest);
-            await supabase.from('articles').insert(seedPayload);
-            return initialArticles;
-          }
-
+        if (!error && data && data.length > 0) {
           const mapped: Article[] = data.map((item: any) => ({
             id: String(item.id),
             title: item.title,
@@ -347,7 +302,6 @@ export const dataService = {
     setStore(STORAGE_KEYS.ARTICLES, articles);
   },
 
-  // --- GALLERY ---
   getGallery: async (): Promise<GalleryItem[]> => {
     const localGallery = getStore(STORAGE_KEYS.GALLERY, initialGallery);
     try {
@@ -359,44 +313,7 @@ export const dataService = {
           error = res.error;
         }
 
-        if (!error && data) {
-          const customLocal = localGallery.filter((g) => !['1', '2', '3', '4', '5', '6'].includes(g.id));
-          if (customLocal.length > 0) {
-            let uploadedAny = false;
-            for (const item of customLocal) {
-              const exists = data.some((d: any) => d.title === item.title);
-              if (!exists) {
-                await supabase.from('gallery').insert([{
-                  title: item.title,
-                  category: item.category,
-                  year: item.year,
-                  image: item.image,
-                }]);
-                uploadedAny = true;
-              }
-            }
-            if (uploadedAny) {
-              const { data: updatedData } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
-              if (updatedData && updatedData.length > 0) {
-                const mapped: GalleryItem[] = updatedData.map((item: any) => ({
-                  id: String(item.id),
-                  title: item.title,
-                  category: item.category,
-                  year: item.year,
-                  image: item.image,
-                }));
-                setStore(STORAGE_KEYS.GALLERY, mapped);
-                return mapped;
-              }
-            }
-          }
-
-          if (data.length === 0) {
-            // Seed without IDs so Supabase generates UUIDs
-            const seedPayload = initialGallery.map(({ id, ...rest }) => rest);
-            await supabase.from('gallery').insert(seedPayload);
-            return initialGallery;
-          }
+        if (!error && data && data.length > 0) {
           const mapped: GalleryItem[] = data.map((item: any) => ({
             id: String(item.id),
             title: item.title,
@@ -478,17 +395,11 @@ export const dataService = {
   },
 
   getPengurus: async (): Promise<PengurusItem[]> => {
+    const TIER_ORDER: Record<string, number> = { pembina: 0, pengawas: 1, pengurus: 2, pelaksana: 3 };
     const localList = getStore(STORAGE_KEYS.PENGURUS, initialPengurus);
     try {
       if (supabaseUrl && supabaseAnonKey) {
-        let { data, error } = await supabase.from('pengurus').select('*').order('created_at', { ascending: true });
-        if (error) {
-          console.warn('[Supabase] getPengurus order failed:', error.message);
-          const res = await supabase.from('pengurus').select('*');
-          data = res.data;
-          error = res.error;
-        }
-
+        let { data, error } = await supabase.from('pengurus').select('*');
         if (error) {
           console.error('[Supabase] getPengurus select failed:', error.message);
         } else if (data) {
@@ -497,26 +408,19 @@ export const dataService = {
             const seedPayload = initialPengurus.map(({ id, ...rest }) => rest);
             const { error: seedErr } = await supabase.from('pengurus').insert(seedPayload);
             if (seedErr) console.error('[Supabase] pengurus seed failed:', seedErr.message);
-            // Re-fetch after seed
             const { data: seeded } = await supabase.from('pengurus').select('*');
             if (seeded && seeded.length > 0) {
-              const mapped: PengurusItem[] = seeded.map((item: any) => ({
-                id: String(item.id),
-                name: item.name,
-                role: item.role,
-                tier: item.tier as any,
-              }));
+              const mapped: PengurusItem[] = seeded
+                .map((item: any) => ({ id: String(item.id), name: item.name, role: item.role, tier: item.tier as any }))
+                .sort((a: PengurusItem, b: PengurusItem) => (TIER_ORDER[a.tier] ?? 99) - (TIER_ORDER[b.tier] ?? 99));
               setStore(STORAGE_KEYS.PENGURUS, mapped);
               return mapped;
             }
             return initialPengurus;
           }
-          const mapped: PengurusItem[] = data.map((item: any) => ({
-            id: String(item.id),
-            name: item.name,
-            role: item.role,
-            tier: item.tier as any,
-          }));
+          const mapped: PengurusItem[] = data
+            .map((item: any) => ({ id: String(item.id), name: item.name, role: item.role, tier: item.tier as any }))
+            .sort((a: PengurusItem, b: PengurusItem) => (TIER_ORDER[a.tier] ?? 99) - (TIER_ORDER[b.tier] ?? 99));
           setStore(STORAGE_KEYS.PENGURUS, mapped);
           return mapped;
         }
