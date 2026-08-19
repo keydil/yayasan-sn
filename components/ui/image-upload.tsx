@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Upload, Link as LinkIcon, X, Image as ImageIcon } from 'lucide-react';
+import { uploadImageToSupabase } from '@/lib/supabase';
 
 interface ImageUploadProps {
   value: string;
@@ -11,7 +12,7 @@ interface ImageUploadProps {
 
 export function ImageUpload({ value, onChange, label = 'Foto / Gambar Header' }: ImageUploadProps) {
   const [mode, setMode] = useState<'upload' | 'url'>('upload');
-  const [isCompressing, setIsCompressing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const compressImage = (file: File): Promise<string> => {
@@ -64,14 +65,21 @@ export function ImageUpload({ value, onChange, label = 'Foto / Gambar Header' }:
     if (!file) return;
 
     try {
-      setIsCompressing(true);
-      const base64 = await compressImage(file);
-      onChange(base64);
+      setIsUploading(true);
+      // Attempt upload to Supabase Storage Bucket 'ysn-media'
+      try {
+        const publicUrl = await uploadImageToSupabase(file, 'media');
+        onChange(publicUrl);
+      } catch (storageErr) {
+        console.warn('Storage bucket upload failed, fallback to compressed Base64:', storageErr);
+        const base64 = await compressImage(file);
+        onChange(base64);
+      }
     } catch (err) {
       console.error('Failed to process image:', err);
       alert('Gagal memproses gambar. Silakan coba file lain.');
     } finally {
-      setIsCompressing(false);
+      setIsUploading(false);
     }
   };
 
@@ -122,9 +130,9 @@ export function ImageUpload({ value, onChange, label = 'Foto / Gambar Header' }:
           >
             <X className="w-4 h-4" />
           </button>
-          {isCompressing && (
+          {isUploading && (
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white text-sm font-semibold">
-              Memproses gambar...
+              Mengunggah ke Supabase Storage Bucket...
             </div>
           )}
         </div>
@@ -147,9 +155,9 @@ export function ImageUpload({ value, onChange, label = 'Foto / Gambar Header' }:
               </div>
               <div>
                 <p className="text-sm font-bold text-gray-800">
-                  {isCompressing ? 'Memproses Gambar...' : 'Klik untuk Pilih Foto dari HP / Komputer'}
+                  {isUploading ? 'Mengunggah ke Supabase Storage...' : 'Klik untuk Pilih Foto dari HP / Komputer'}
                 </p>
-                <p className="text-xs text-gray-500 mt-0.5">Format JPG, PNG, WEBP (Otomatis diompresi)</p>
+                <p className="text-xs text-gray-500 mt-0.5">Otomatis ter-upload ke Supabase Storage Bucket (ysn-media)</p>
               </div>
             </div>
           ) : (

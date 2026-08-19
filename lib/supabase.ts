@@ -5,6 +5,38 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+export const uploadImageToSupabase = async (file: File, folder = 'uploads'): Promise<string> => {
+  try {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Supabase URL or Key missing');
+    }
+
+    const fileExt = file.name.split('.').pop() || 'jpg';
+    const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+
+    const { data, error } = await supabase.storage
+      .from('ysn-media')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (error) {
+      console.warn('Supabase Storage Bucket upload error:', error);
+      throw error;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('ysn-media')
+      .getPublicUrl(fileName);
+
+    return publicUrlData.publicUrl;
+  } catch (err) {
+    console.error('Storage upload failed:', err);
+    throw err;
+  }
+};
+
 // Data types
 export interface Article {
   id: string;
