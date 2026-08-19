@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { dataService, GalleryItem } from '@/lib/supabase';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { MultiImageUpload } from '@/components/ui/multi-image-upload';
-import { Plus, Trash2, Image as ImageIcon, ArrowLeft, Images } from 'lucide-react';
+import { Plus, Edit2, Trash2, Image as ImageIcon, ArrowLeft, Images } from 'lucide-react';
 
 export default function AdminGaleriPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -30,6 +30,18 @@ export default function AdminGaleriPage() {
     setLoading(false);
   };
 
+  const handleEdit = (item: GalleryItem) => {
+    setNewItem({
+      id: item.id,
+      title: item.title,
+      category: item.category,
+      year: item.year,
+      image: item.image,
+      images: item.images || [],
+    });
+    setIsEditing(true);
+  };
+
   const handleDelete = async (id: string) => {
     if (confirm('Apakah Anda yakin ingin menghapus foto galeri ini?')) {
       setLoading(true);
@@ -44,6 +56,7 @@ export default function AdminGaleriPage() {
 
     setLoading(true);
     await dataService.saveGalleryItem({
+      id: newItem.id,
       title: newItem.title || '',
       category: newItem.category || 'Penghijauan',
       year: newItem.year || '2025',
@@ -151,13 +164,10 @@ export default function AdminGaleriPage() {
 
               {/* Multi-image upload */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Images className="w-4 h-4 text-emerald-600" />
-                  FOTO DOKUMENTASI TAMBAHAN <span className="text-gray-400 font-normal normal-case">(Opsional - bisa pilih banyak foto)</span>
-                </label>
                 <MultiImageUpload
-                  values={newItem.images || []}
+                  value={newItem.images || []}
                   onChange={(vals) => setNewItem({ ...newItem, images: vals })}
+                  label="Foto Dokumentasi Tambahan"
                 />
               </div>
 
@@ -203,16 +213,28 @@ export default function AdminGaleriPage() {
                         </span>
                       )}
                     </div>
-                    <div className="p-4 flex items-center justify-between gap-3 border-t border-gray-100 bg-white">
+                    <div className="p-4 flex items-center justify-between gap-2 border-t border-gray-100 bg-white">
                       <h3 className="font-bold text-gray-900 text-sm truncate flex-1">{item.title}</h3>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDelete(item.id)}
-                        className="text-red-600 border-red-200 hover:bg-red-50 p-2 rounded-lg"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(item)}
+                          className="text-emerald-700 border-emerald-200 hover:bg-emerald-50 p-2 rounded-lg"
+                          title="Edit Foto & Dokumentasi"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDelete(item.id)}
+                          className="text-red-600 border-red-200 hover:bg-red-50 p-2 rounded-lg"
+                          title="Hapus"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
