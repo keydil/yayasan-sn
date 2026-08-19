@@ -161,7 +161,14 @@ export const dataService = {
 
     try {
       if (supabaseUrl && supabaseAnonKey) {
-        const { data, error } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
+        let { data, error } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
+        if (error) {
+          console.warn('[Supabase Warning] order by created_at failed, retrying plain select:', error.message);
+          const res = await supabase.from('articles').select('*');
+          data = res.data;
+          error = res.error;
+        }
+
         if (!error && data) {
           // Check if local storage has custom articles (IDs not 1, 2, 3) that are missing in Supabase
           const customLocal = localArticles.filter((a) => !['1', '2', '3'].includes(a.id));
@@ -267,31 +274,47 @@ export const dataService = {
 
     try {
       if (supabaseUrl && supabaseAnonKey) {
-        const payload: any = {
+        const basePayload: any = {
           title: article.title,
           excerpt: article.excerpt,
           content: article.content,
           category: article.category,
           date: formattedDate,
           image: article.image,
+        };
+
+        const fullPayload: any = {
+          ...basePayload,
           images: JSON.stringify(article.images || []),
           video_url: article.videoUrl || '',
         };
 
         if (article.id && !isNaN(Number(article.id))) {
           // Update existing DB row
-          await supabase.from('articles').update(payload).eq('id', article.id);
+          let { error } = await supabase.from('articles').update(fullPayload).eq('id', article.id);
+          if (error) {
+            console.warn('Full payload update failed, retrying base payload:', error.message);
+            const res = await supabase.from('articles').update(basePayload).eq('id', article.id);
+            if (res.error) console.error('Supabase update error:', res.error);
+          }
         } else {
           // Insert new DB row
-          const { data, error } = await supabase.from('articles').insert([payload]).select().single();
+          let res = await supabase.from('articles').insert([fullPayload]).select().single();
+          if (res.error) {
+            console.warn('Full payload insert failed, retrying base payload:', res.error.message);
+            res = await supabase.from('articles').insert([basePayload]).select().single();
+          }
 
-          if (!error && data) {
-            savedItem.id = String(data.id);
+          if (res.error) {
+            console.error('Supabase insert error:', res.error);
+          } else if (res.data) {
+            savedItem.id = String(res.data.id);
+            console.log('Successfully saved article to Supabase Cloud DB! ID:', res.data.id);
           }
         }
       }
     } catch (err) {
-      console.warn('Supabase save article fallback:', err);
+      console.error('Supabase save article exception:', err);
     }
 
     // Sync to local storage
@@ -328,7 +351,13 @@ export const dataService = {
     const localGallery = getStore(STORAGE_KEYS.GALLERY, initialGallery);
     try {
       if (supabaseUrl && supabaseAnonKey) {
-        const { data, error } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
+        let { data, error } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
+        if (error) {
+          const res = await supabase.from('gallery').select('*');
+          data = res.data;
+          error = res.error;
+        }
+
         if (!error && data) {
           const customLocal = localGallery.filter((g) => !['1', '2', '3', '4', '5', '6'].includes(g.id));
           if (customLocal.length > 0) {
