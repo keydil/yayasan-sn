@@ -17,7 +17,7 @@ export default function AdminBeritaPage() {
     excerpt: '',
     content: '',
     category: 'Penghijauan',
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
+    image: '',
   });
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function AdminBeritaPage() {
       excerpt: '',
       content: '',
       category: 'Penghijauan',
-      image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
+      image: '',
     });
     setIsEditing(true);
   };

@@ -16,7 +16,7 @@ export default function AdminGaleriPage() {
     title: '',
     category: 'Penghijauan',
     year: new Date().getFullYear().toString(),
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
+    image: '',
   });
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function AdminGaleriPage() {
       title: newItem.title || '',
       category: newItem.category || 'Penghijauan',
       year: newItem.year || '2025',
-      image: newItem.image || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
+      image: newItem.image || '',
     });
 
     setIsEditing(false);
@@ -55,7 +55,7 @@ export default function AdminGaleriPage() {
       title: '',
       category: 'Penghijauan',
       year: new Date().getFullYear().toString(),
-      image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
+      image: '',
     });
     await loadGallery();
   };
