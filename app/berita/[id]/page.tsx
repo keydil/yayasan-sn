@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use, useCallback } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Tag, Video, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
+import { ArrowLeft, Calendar, Tag, Video, ChevronLeft, ChevronRight, X, ZoomIn, Play } from 'lucide-react';
 import { dataService, Article } from '@/lib/supabase';
 
 function getVideoEmbedData(url?: string): { type: 'iframe' | 'video'; url: string } | null {
@@ -28,12 +28,16 @@ function getVideoEmbedData(url?: string): { type: 'iframe' | 'video'; url: strin
   return null;
 }
 
-function CombinedHeroCarousel({ images, title }: { images: string[]; title: string }) {
+export type MediaSlide =
+  | { id: string; type: 'image'; url: string }
+  | { id: string; type: 'video'; embed: { type: 'iframe' | 'video'; url: string }; rawUrl: string };
+
+function UnifiedHeroCarousel({ slides, title }: { slides: MediaSlide[]; title: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightbox, setLightbox] = useState(false);
 
-  const prev = useCallback(() => setActiveIdx((i) => (i - 1 + images.length) % images.length), [images.length]);
-  const next = useCallback(() => setActiveIdx((i) => (i + 1) % images.length), [images.length]);
+  const prev = useCallback(() => setActiveIdx((i) => (i - 1 + slides.length) % slides.length), [slides.length]);
+  const next = useCallback(() => setActiveIdx((i) => (i + 1) % slides.length), [slides.length]);
 
   useEffect(() => {
     if (!lightbox) return;
@@ -46,10 +50,12 @@ function CombinedHeroCarousel({ images, title }: { images: string[]; title: stri
     return () => window.removeEventListener('keydown', handler);
   }, [lightbox, prev, next]);
 
+  const currentSlide = slides[activeIdx] || slides[0];
+
   return (
     <>
-      {/* Lightbox Fullscreen Modal */}
-      {lightbox && (
+      {/* Lightbox Fullscreen Modal (for photos) */}
+      {lightbox && currentSlide.type === 'image' && (
         <div
           className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center"
           onClick={() => setLightbox(false)}
@@ -62,7 +68,7 @@ function CombinedHeroCarousel({ images, title }: { images: string[]; title: stri
           </button>
 
           <div className="relative w-full max-w-5xl px-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            {images.length > 1 && (
+            {slides.length > 1 && (
               <button
                 onClick={prev}
                 className="absolute left-2 sm:left-6 z-10 bg-white/10 hover:bg-white/25 text-white p-3 rounded-full backdrop-blur transition-all"
@@ -72,12 +78,12 @@ function CombinedHeroCarousel({ images, title }: { images: string[]; title: stri
             )}
 
             <img
-              src={images[activeIdx]}
-              alt={`${title} - Foto ${activeIdx + 1}`}
+              src={currentSlide.url}
+              alt={`${title} - Slide ${activeIdx + 1}`}
               className="max-h-[80vh] max-w-full object-contain rounded-xl shadow-2xl"
             />
 
-            {images.length > 1 && (
+            {slides.length > 1 && (
               <button
                 onClick={next}
                 className="absolute right-2 sm:right-6 z-10 bg-white/10 hover:bg-white/25 text-white p-3 rounded-full backdrop-blur transition-all"
@@ -87,62 +93,65 @@ function CombinedHeroCarousel({ images, title }: { images: string[]; title: stri
             )}
           </div>
 
-          <p className="text-white/60 text-sm mt-4 font-medium">{activeIdx + 1} / {images.length}</p>
-
-          {/* Lightbox thumbnail bar */}
-          {images.length > 1 && (
-            <div className="flex gap-2 mt-4 px-4 overflow-x-auto max-w-full pb-2">
-              {images.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
-                  className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
-                    idx === activeIdx ? 'border-emerald-400 scale-110 ring-2 ring-emerald-400/50' : 'border-white/20 opacity-60 hover:opacity-100'
-                  }`}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          )}
+          <p className="text-white/60 text-sm mt-4 font-medium">{activeIdx + 1} / {slides.length}</p>
         </div>
       )}
 
-      {/* Main Top Hero Carousel */}
+      {/* Main Top Hero Carousel (Shopee / Tokopedia Style) */}
       <div className="mb-10 rounded-3xl overflow-hidden border border-gray-200 bg-gray-950 shadow-xl">
         {/* Main Display Area */}
-        <div className="relative aspect-[16/9] bg-black group cursor-zoom-in" onClick={() => setLightbox(true)}>
-          <img
-            key={activeIdx}
-            src={images[activeIdx]}
-            alt={`${title} - Foto ${activeIdx + 1}`}
-            className="w-full h-full object-cover transition-opacity duration-300"
-          />
-
-          {/* Hover Zoom Prompt */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
-            <div className="bg-black/60 text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur shadow-lg">
-              <ZoomIn className="w-4 h-4" /> Klik untuk Fullscreen
+        <div className="relative aspect-[16/9] bg-black group flex items-center justify-center">
+          {currentSlide.type === 'image' ? (
+            <div className="w-full h-full relative cursor-zoom-in" onClick={() => setLightbox(true)}>
+              <img
+                key={activeIdx}
+                src={currentSlide.url}
+                alt={`${title} - Slide ${activeIdx + 1}`}
+                className="w-full h-full object-cover transition-opacity duration-300"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                <div className="bg-black/60 text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur shadow-lg">
+                  <ZoomIn className="w-4 h-4" /> Perbesar Foto
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="w-full h-full bg-black">
+              {currentSlide.embed.type === 'iframe' ? (
+                <iframe
+                  src={currentSlide.embed.url}
+                  title="Dokumentasi Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full border-0"
+                />
+              ) : (
+                <video src={currentSlide.embed.url} controls className="w-full h-full object-contain" />
+              )}
+            </div>
+          )}
 
           {/* Top Badge Counter */}
-          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full shadow">
-            {activeIdx + 1} / {images.length} Foto
+          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full shadow pointer-events-none z-10 flex items-center gap-1.5">
+            {currentSlide.type === 'video' ? (
+              <span className="text-emerald-400 font-bold flex items-center gap-1"><Play className="w-3 h-3 fill-emerald-400" /> VIDEO</span>
+            ) : (
+              <span>{activeIdx + 1} / {slides.length}</span>
+            )}
           </div>
 
           {/* Navigation Arrows */}
-          {images.length > 1 && (
+          {slides.length > 1 && (
             <>
               <button
-                onClick={(e) => { e.stopPropagation(); prev(); }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2.5 rounded-full backdrop-blur transition-all opacity-0 group-hover:opacity-100"
+                onClick={prev}
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2.5 rounded-full backdrop-blur transition-all opacity-0 group-hover:opacity-100 z-10"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
-                onClick={(e) => { e.stopPropagation(); next(); }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2.5 rounded-full backdrop-blur transition-all opacity-0 group-hover:opacity-100"
+                onClick={next}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-2.5 rounded-full backdrop-blur transition-all opacity-0 group-hover:opacity-100 z-10"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -150,13 +159,17 @@ function CombinedHeroCarousel({ images, title }: { images: string[]; title: stri
           )}
 
           {/* Bottom Dot Indicators */}
-          {images.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-              {images.map((_, idx) => (
+          {slides.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 pointer-events-none">
+              {slides.map((s, idx) => (
                 <button
                   key={idx}
-                  onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
-                  className={`rounded-full transition-all ${idx === activeIdx ? 'w-6 h-2 bg-emerald-400' : 'w-2 h-2 bg-white/50 hover:bg-white'}`}
+                  className={`rounded-full transition-all pointer-events-auto ${
+                    idx === activeIdx
+                      ? s.type === 'video' ? 'w-6 h-2 bg-emerald-400' : 'w-6 h-2 bg-white'
+                      : 'w-2 h-2 bg-white/50 hover:bg-white'
+                  }`}
+                  onClick={() => setActiveIdx(idx)}
                 />
               ))}
             </div>
@@ -164,19 +177,28 @@ function CombinedHeroCarousel({ images, title }: { images: string[]; title: stri
         </div>
 
         {/* Bottom Thumbnail Strip (Shopee / Tokped style) */}
-        {images.length > 1 && (
+        {slides.length > 1 && (
           <div className="flex gap-2.5 p-3.5 bg-gray-900 overflow-x-auto scrollbar-thin">
-            {images.map((img, idx) => (
+            {slides.map((s, idx) => (
               <button
                 key={idx}
                 onClick={() => setActiveIdx(idx)}
-                className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all relative ${
                   idx === activeIdx
                     ? 'border-emerald-400 ring-2 ring-emerald-400/40 scale-105 opacity-100'
                     : 'border-transparent opacity-50 hover:opacity-90'
                 }`}
               >
-                <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                {s.type === 'image' ? (
+                  <img src={s.url} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-emerald-950 flex flex-col items-center justify-center text-white gap-1 relative overflow-hidden">
+                    <div className="w-8 h-8 rounded-full bg-emerald-600/90 flex items-center justify-center shadow">
+                      <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+                    </div>
+                    <span className="text-[9px] font-bold tracking-wider text-emerald-300">VIDEO</span>
+                  </div>
+                )}
               </button>
             ))}
           </div>
@@ -227,12 +249,17 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
     );
   }
 
-  const videoData = getVideoEmbedData(article.videoUrl);
+  // Construct slides: Cover Image -> Extra Photos -> Video Slide (if present)
+  const slides: MediaSlide[] = [];
+  const photoUrls = Array.from(new Set([article.image, ...(article.images || [])].filter(Boolean)));
+  photoUrls.forEach((url, i) => {
+    slides.push({ id: `img-${i}`, type: 'image', url });
+  });
 
-  // Combine cover image and extra images into ONE list for top carousel
-  const allPhotos = Array.from(
-    new Set([article.image, ...(article.images || [])].filter(Boolean))
-  );
+  const videoEmbed = getVideoEmbedData(article.videoUrl);
+  if (videoEmbed && article.videoUrl) {
+    slides.push({ id: 'video-doc', type: 'video', embed: videoEmbed, rawUrl: article.videoUrl });
+  }
 
   return (
     <main className="min-h-screen bg-white py-12 sm:py-16">
@@ -257,8 +284,8 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
           {article.title}
         </h1>
 
-        {/* SINGLE COMBINED HERO CAROUSEL AT THE TOP */}
-        <CombinedHeroCarousel images={allPhotos} title={article.title} />
+        {/* UNIFIED HERO CAROUSEL AT THE TOP (Photos + Video together) */}
+        <UnifiedHeroCarousel slides={slides} title={article.title} />
 
         {/* Excerpt Highlight Box */}
         <div className="p-6 bg-emerald-50/70 border-l-4 border-emerald-600 rounded-r-2xl mb-8">
@@ -269,28 +296,6 @@ export default function BeritaDetailPage({ params }: { params: Promise<{ id: str
         <div className="prose prose-emerald max-w-none text-gray-800 text-base sm:text-lg leading-relaxed space-y-4 whitespace-pre-line mb-12">
           {article.content}
         </div>
-
-        {/* Video Embed Section (YouTube / Google Drive / MP4) */}
-        {videoData && (
-          <div className="mb-12 bg-gray-900 rounded-3xl p-4 sm:p-6 shadow-xl border border-gray-800">
-            <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase tracking-wider mb-4">
-              <Video className="w-5 h-5 text-emerald-400" /> Dokumentasi Video Kegiatan
-            </div>
-            <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black">
-              {videoData.type === 'iframe' ? (
-                <iframe
-                  src={videoData.url}
-                  title="Dokumentasi Video"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full border-0"
-                />
-              ) : (
-                <video src={videoData.url} controls className="w-full h-full object-contain" />
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200">

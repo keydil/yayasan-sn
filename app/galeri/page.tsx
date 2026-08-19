@@ -2,7 +2,7 @@
 
 import { Card } from '@/components/ui/card';
 import { useState, useEffect, useCallback } from 'react';
-import { X, ZoomIn, Image as ImageIcon, ChevronLeft, ChevronRight, Images, Video } from 'lucide-react';
+import { X, ZoomIn, Image as ImageIcon, ChevronLeft, ChevronRight, Images, Play } from 'lucide-react';
 import { dataService, GalleryItem } from '@/lib/supabase';
 
 function getVideoEmbedData(url?: string): { type: 'iframe' | 'video'; url: string } | null {
@@ -28,11 +28,15 @@ function getVideoEmbedData(url?: string): { type: 'iframe' | 'video'; url: strin
   return null;
 }
 
-function ModalCarousel({ images, title }: { images: string[]; title: string }) {
+export type GaleriSlide =
+  | { type: 'image'; url: string }
+  | { type: 'video'; embed: { type: 'iframe' | 'video'; url: string } };
+
+function ModalCarousel({ slides, title }: { slides: GaleriSlide[]; title: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
 
-  const prev = useCallback(() => setActiveIdx((i) => (i - 1 + images.length) % images.length), [images.length]);
-  const next = useCallback(() => setActiveIdx((i) => (i + 1) % images.length), [images.length]);
+  const prev = useCallback(() => setActiveIdx((i) => (i - 1 + slides.length) % slides.length), [slides.length]);
+  const next = useCallback(() => setActiveIdx((i) => (i + 1) % slides.length), [slides.length]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -43,24 +47,46 @@ function ModalCarousel({ images, title }: { images: string[]; title: string }) {
     return () => window.removeEventListener('keydown', handler);
   }, [prev, next]);
 
+  const currentSlide = slides[activeIdx] || slides[0];
+
   return (
     <div className="bg-gray-950">
-      {/* Main Image Display */}
+      {/* Main Display Area */}
       <div className="relative aspect-[16/9] bg-black flex items-center justify-center group overflow-hidden">
-        <img
-          key={activeIdx}
-          src={images[activeIdx]}
-          alt={`${title} - Foto ${activeIdx + 1}`}
-          className="max-h-full max-w-full object-contain"
-        />
+        {currentSlide.type === 'image' ? (
+          <img
+            key={activeIdx}
+            src={currentSlide.url}
+            alt={`${title} - Foto ${activeIdx + 1}`}
+            className="max-h-full max-w-full object-contain"
+          />
+        ) : (
+          <div className="w-full h-full bg-black">
+            {currentSlide.embed.type === 'iframe' ? (
+              <iframe
+                src={currentSlide.embed.url}
+                title="Dokumentasi Video Galeri"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full border-0"
+              />
+            ) : (
+              <video src={currentSlide.embed.url} controls className="w-full h-full object-contain" />
+            )}
+          </div>
+        )}
 
-        {/* Counter Badge */}
-        <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">
-          {activeIdx + 1} / {images.length}
+        {/* Counter / Video Badge */}
+        <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+          {currentSlide.type === 'video' ? (
+            <span className="text-emerald-400 font-bold flex items-center gap-1"><Play className="w-3 h-3 fill-emerald-400" /> VIDEO</span>
+          ) : (
+            <span>{activeIdx + 1} / {slides.length}</span>
+          )}
         </div>
 
         {/* Navigation Arrows */}
-        {images.length > 1 && (
+        {slides.length > 1 && (
           <>
             <button
               onClick={prev}
@@ -79,19 +105,28 @@ function ModalCarousel({ images, title }: { images: string[]; title: string }) {
       </div>
 
       {/* Thumbnail Strip */}
-      {images.length > 1 && (
+      {slides.length > 1 && (
         <div className="flex gap-2 p-3 bg-gray-900 overflow-x-auto scrollbar-thin">
-          {images.map((img, idx) => (
+          {slides.map((s, idx) => (
             <button
               key={idx}
               onClick={() => setActiveIdx(idx)}
-              className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all ${
+              className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all relative ${
                 idx === activeIdx
                   ? 'border-emerald-400 ring-2 ring-emerald-400/40 opacity-100 scale-105'
                   : 'border-transparent opacity-50 hover:opacity-90'
               }`}
             >
-              <img src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+              {s.type === 'image' ? (
+                <img src={s.url} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-emerald-950 flex flex-col items-center justify-center text-white gap-1 relative overflow-hidden">
+                  <div className="w-7 h-7 rounded-full bg-emerald-600/90 flex items-center justify-center shadow">
+                    <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
+                  </div>
+                  <span className="text-[9px] font-bold tracking-wider text-emerald-300">VIDEO</span>
+                </div>
+              )}
             </button>
           ))}
         </div>
@@ -169,6 +204,9 @@ export default function GaleriPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems.map((item) => {
                 const itemPhotos = Array.from(new Set([item.image, ...(item.images || [])].filter(Boolean)));
+                const hasVideo = !!item.videoUrl && !!getVideoEmbedData(item.videoUrl);
+                const mediaCount = itemPhotos.length + (hasVideo ? 1 : 0);
+
                 return (
                   <Card
                     key={item.id}
@@ -186,11 +224,18 @@ export default function GaleriPage() {
                           <ZoomIn className="w-8 h-8 text-white" />
                         </div>
                       </div>
-                      {itemPhotos.length > 1 && (
-                        <div className="absolute top-3 right-3 bg-black/70 text-white text-[11px] font-bold px-2.5 py-1 rounded-full backdrop-blur flex items-center gap-1">
-                          <Images className="w-3.5 h-3.5" /> {itemPhotos.length} Foto
-                        </div>
-                      )}
+                      <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                        {hasVideo && (
+                          <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow flex items-center gap-1">
+                            <Play className="w-2.5 h-2.5 fill-white" /> Video
+                          </span>
+                        )}
+                        {mediaCount > 1 && (
+                          <span className="bg-black/70 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full backdrop-blur flex items-center gap-1">
+                            <Images className="w-3.5 h-3.5" /> {mediaCount} Media
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="p-4 sm:p-6">
                       <div className="flex items-center gap-2 mb-2">
@@ -217,66 +262,50 @@ export default function GaleriPage() {
       </section>
 
       {/* Zoom / Carousel Popup Modal */}
-      {selectedItem && (
-        <div
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setSelectedItem(null)}
-        >
+      {selectedItem && (() => {
+        const itemPhotos = Array.from(new Set([selectedItem.image, ...(selectedItem.images || [])].filter(Boolean)));
+        const modalSlides: GaleriSlide[] = itemPhotos.map((url) => ({ type: 'image', url }));
+        const videoEmbed = getVideoEmbedData(selectedItem.videoUrl);
+        if (videoEmbed) {
+          modalSlides.push({ type: 'video', embed: videoEmbed });
+        }
+
+        return (
           <div
-            className="bg-white rounded-2xl overflow-hidden max-w-4xl w-full shadow-2xl animate-in fade-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setSelectedItem(null)}
           >
-            {/* Header bar */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
-              <div className="flex items-center gap-2">
-                <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-                  {selectedItem.category}
-                </span>
-                <span className="text-sm text-gray-500">{selectedItem.year}</span>
-              </div>
-              <button
-                onClick={() => setSelectedItem(null)}
-                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-              >
-                <X className="w-5 h-5 text-gray-600" />
-              </button>
-            </div>
-
-            {/* Carousel display for modal */}
-            <ModalCarousel
-              images={Array.from(new Set([selectedItem.image, ...(selectedItem.images || [])].filter(Boolean)))}
-              title={selectedItem.title}
-            />
-
-            {/* Title / Caption & Video */}
-            <div className="p-5 bg-white border-t border-gray-100 space-y-4">
-              <h3 className="text-xl font-bold text-gray-900">{selectedItem.title}</h3>
-
-              {/* Video Player Embed if present */}
-              {selectedItem.videoUrl && getVideoEmbedData(selectedItem.videoUrl) && (
-                <div className="pt-3 border-t border-gray-100">
-                  <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-wider mb-2">
-                    <Video className="w-4 h-4" /> Video Dokumentasi
-                  </div>
-                  <div className="aspect-video w-full rounded-xl overflow-hidden bg-black shadow">
-                    {getVideoEmbedData(selectedItem.videoUrl)!.type === 'iframe' ? (
-                      <iframe
-                        src={getVideoEmbedData(selectedItem.videoUrl)!.url}
-                        title="Video Dokumentasi Galeri"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full border-0"
-                      />
-                    ) : (
-                      <video src={getVideoEmbedData(selectedItem.videoUrl)!.url} controls className="w-full h-full object-contain" />
-                    )}
-                  </div>
+            <div
+              className="bg-white rounded-2xl overflow-hidden max-w-4xl w-full shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header bar */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                    {selectedItem.category}
+                  </span>
+                  <span className="text-sm text-gray-500">{selectedItem.year}</span>
                 </div>
-              )}
+                <button
+                  onClick={() => setSelectedItem(null)}
+                  className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+
+              {/* Unified Carousel display for modal (Photos + Video together) */}
+              <ModalCarousel slides={modalSlides} title={selectedItem.title} />
+
+              {/* Title / Caption */}
+              <div className="p-5 bg-white border-t border-gray-100">
+                <h3 className="text-xl font-bold text-gray-900">{selectedItem.title}</h3>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </main>
   );
 }
