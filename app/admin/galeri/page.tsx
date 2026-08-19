@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { dataService, GalleryItem } from '@/lib/supabase';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { MultiImageUpload } from '@/components/ui/multi-image-upload';
-import { Plus, Edit2, Trash2, Image as ImageIcon, ArrowLeft, Images } from 'lucide-react';
+import { Plus, Edit2, Trash2, Image as ImageIcon, ArrowLeft, Images, Video } from 'lucide-react';
 
 export default function AdminGaleriPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -38,6 +38,7 @@ export default function AdminGaleriPage() {
       year: item.year,
       image: item.image,
       images: item.images || [],
+      videoUrl: item.videoUrl || '',
     });
     setIsEditing(true);
   };
@@ -62,10 +63,11 @@ export default function AdminGaleriPage() {
       year: newItem.year || '2025',
       image: newItem.image || '',
       images: newItem.images || [],
+      videoUrl: newItem.videoUrl || '',
     });
 
     setIsEditing(false);
-    setNewItem({ title: '', category: 'Penghijauan', year: new Date().getFullYear().toString(), image: '', images: [] });
+    setNewItem({ title: '', category: 'Penghijauan', year: new Date().getFullYear().toString(), image: '', images: [], videoUrl: '' });
     await loadGallery();
   };
 
@@ -169,6 +171,22 @@ export default function AdminGaleriPage() {
                   onChange={(vals) => setNewItem({ ...newItem, images: vals })}
                   label="Foto Dokumentasi Tambahan"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                  Link Video Dokumentasi (YouTube URL) <span className="text-gray-400 font-normal">(Opsional)</span>
+                </label>
+                <div className="relative">
+                  <Video className="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="url"
+                    value={newItem.videoUrl || ''}
+                    onChange={(e) => setNewItem({ ...newItem, videoUrl: e.target.value })}
+                    placeholder="Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ atau https://youtu.be/..."
+                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-medium"
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">

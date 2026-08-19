@@ -69,6 +69,7 @@ export interface GalleryItem {
   year: string;
   image: string;
   images?: string[];
+  videoUrl?: string;
 }
 
 export interface PengurusItem {
@@ -343,6 +344,7 @@ export const dataService = {
             year: item.year,
             image: item.image,
             images: Array.isArray(item.images) ? item.images : (typeof item.images === 'string' && item.images.startsWith('[') ? JSON.parse(item.images) : []),
+            videoUrl: item.videoUrl || item.video_url || '',
           }));
           setStore(STORAGE_KEYS.GALLERY, mapped);
           return mapped;
@@ -362,6 +364,7 @@ export const dataService = {
       year: item.year,
       image: item.image,
       images: item.images || [],
+      videoUrl: item.videoUrl || '',
     };
 
     try {
@@ -372,6 +375,7 @@ export const dataService = {
           year: item.year,
           image: item.image,
           images: JSON.stringify(item.images || []),
+          video_url: item.videoUrl || '',
         };
         const basePayload = {
           title: item.title,

@@ -2,8 +2,18 @@
 
 import { Card } from '@/components/ui/card';
 import { useState, useEffect, useCallback } from 'react';
-import { X, ZoomIn, Image as ImageIcon, ChevronLeft, ChevronRight, Images } from 'lucide-react';
+import { X, ZoomIn, Image as ImageIcon, ChevronLeft, ChevronRight, Images, Video } from 'lucide-react';
 import { dataService, GalleryItem } from '@/lib/supabase';
+
+function getYouTubeEmbedUrl(url?: string): string | null {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    return `https://www.youtube.com/embed/${match[2]}`;
+  }
+  return null;
+}
 
 function ModalCarousel({ images, title }: { images: string[]; title: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -225,9 +235,27 @@ export default function GaleriPage() {
               title={selectedItem.title}
             />
 
-            {/* Title / Caption */}
-            <div className="p-5 bg-white border-t border-gray-100">
+            {/* Title / Caption & Video */}
+            <div className="p-5 bg-white border-t border-gray-100 space-y-4">
               <h3 className="text-xl font-bold text-gray-900">{selectedItem.title}</h3>
+
+              {/* YouTube Video Player Embed if present */}
+              {selectedItem.videoUrl && getYouTubeEmbedUrl(selectedItem.videoUrl) && (
+                <div className="pt-3 border-t border-gray-100">
+                  <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-wider mb-2">
+                    <Video className="w-4 h-4" /> Video Dokumentasi
+                  </div>
+                  <div className="aspect-video w-full rounded-xl overflow-hidden bg-black shadow">
+                    <iframe
+                      src={getYouTubeEmbedUrl(selectedItem.videoUrl)!}
+                      title="Video Dokumentasi Galeri"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full border-0"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
