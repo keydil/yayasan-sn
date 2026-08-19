@@ -207,8 +207,9 @@ export const dataService = {
           }
 
           if (data.length === 0) {
-            // Auto seed initial to Supabase
-            await supabase.from('articles').insert(initialArticles);
+            // Seed without IDs so Supabase generates UUIDs
+            const seedPayload = initialArticles.map(({ id, ...rest }) => rest);
+            await supabase.from('articles').insert(seedPayload);
             return initialArticles;
           }
 
@@ -391,7 +392,9 @@ export const dataService = {
           }
 
           if (data.length === 0) {
-            await supabase.from('gallery').insert(initialGallery);
+            // Seed without IDs so Supabase generates UUIDs
+            const seedPayload = initialGallery.map(({ id, ...rest }) => rest);
+            await supabase.from('gallery').insert(seedPayload);
             return initialGallery;
           }
           const mapped: GalleryItem[] = data.map((item: any) => ({
@@ -474,21 +477,38 @@ export const dataService = {
     setStore(STORAGE_KEYS.GALLERY, gallery);
   },
 
-  // --- PENGURUS ---
   getPengurus: async (): Promise<PengurusItem[]> => {
     const localList = getStore(STORAGE_KEYS.PENGURUS, initialPengurus);
     try {
       if (supabaseUrl && supabaseAnonKey) {
         let { data, error } = await supabase.from('pengurus').select('*').order('created_at', { ascending: true });
         if (error) {
+          console.warn('[Supabase] getPengurus order failed:', error.message);
           const res = await supabase.from('pengurus').select('*');
           data = res.data;
           error = res.error;
         }
 
-        if (!error && data) {
+        if (error) {
+          console.error('[Supabase] getPengurus select failed:', error.message);
+        } else if (data) {
           if (data.length === 0) {
-            await supabase.from('pengurus').insert(initialPengurus);
+            // Seed without IDs so Supabase generates UUIDs
+            const seedPayload = initialPengurus.map(({ id, ...rest }) => rest);
+            const { error: seedErr } = await supabase.from('pengurus').insert(seedPayload);
+            if (seedErr) console.error('[Supabase] pengurus seed failed:', seedErr.message);
+            // Re-fetch after seed
+            const { data: seeded } = await supabase.from('pengurus').select('*');
+            if (seeded && seeded.length > 0) {
+              const mapped: PengurusItem[] = seeded.map((item: any) => ({
+                id: String(item.id),
+                name: item.name,
+                role: item.role,
+                tier: item.tier as any,
+              }));
+              setStore(STORAGE_KEYS.PENGURUS, mapped);
+              return mapped;
+            }
             return initialPengurus;
           }
           const mapped: PengurusItem[] = data.map((item: any) => ({
@@ -502,7 +522,7 @@ export const dataService = {
         }
       }
     } catch (err) {
-      console.warn('Supabase fetch pengurus fallback:', err);
+      console.error('[Supabase] getPengurus exception:', err);
     }
     return localList;
   },
