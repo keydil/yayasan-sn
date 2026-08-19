@@ -5,6 +5,7 @@ import { AdminLayout } from '@/components/admin-layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { dataService, GalleryItem } from '@/lib/supabase';
+import { ImageUpload } from '@/components/ui/image-upload';
 import { Plus, Trash2, Image as ImageIcon, ArrowLeft } from 'lucide-react';
 
 export default function AdminGaleriPage() {
@@ -131,16 +132,10 @@ export default function AdminGaleriPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    URL Foto Gambar *
-                  </label>
-                  <input
-                    type="url"
-                    value={newItem.image}
-                    onChange={(e) => setNewItem({ ...newItem, image: e.target.value })}
-                    placeholder="https://images.unsplash.com/photo-..."
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-medium"
-                    required
+                  <ImageUpload
+                    value={newItem.image || ''}
+                    onChange={(val) => setNewItem({ ...newItem, image: val })}
+                    label="Foto Kegiatan Galeri"
                   />
                 </div>
 

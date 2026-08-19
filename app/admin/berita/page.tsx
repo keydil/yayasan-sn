@@ -5,6 +5,7 @@ import { AdminLayout } from '@/components/admin-layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { dataService, Article } from '@/lib/supabase';
+import { ImageUpload } from '@/components/ui/image-upload';
 import { Plus, Edit2, Trash2, Newspaper, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 
 export default function AdminBeritaPage() {
@@ -145,24 +146,11 @@ export default function AdminBeritaPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                  URL Gambar Header (Foto Artikel) *
-                </label>
-                <div className="flex gap-3">
-                  <div className="relative flex-1">
-                    <ImageIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="url"
-                      value={currentArticle.image}
-                      onChange={(e) => setCurrentArticle({ ...currentArticle, image: e.target.value })}
-                      placeholder="https://images.unsplash.com/photo-..."
-                      className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-medium"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
+              <ImageUpload
+                value={currentArticle.image || ''}
+                onChange={(val) => setCurrentArticle({ ...currentArticle, image: val })}
+                label="Foto / Gambar Header Artikel"
+              />
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
