@@ -33,7 +33,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
             <img
-              src="/logo-huut.png"
+              src="/huut-premium.jpeg"
               alt="Logo Sahabat Nusantara"
               className="h-10 w-auto object-contain"
             />
