@@ -106,7 +106,7 @@ export default function Home() {
               Yayasan Sahabat Nusantara
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              Mendorong Keadilan Sosial & <span className="text-emerald-300">Ketangguhan Ekologis</span>
+              Membangun Keadilan Sosial & <span className="text-emerald-300">Ketangguhan Ekologis</span>
             </h1>
             <p className="text-lg sm:text-xl text-emerald-100 max-w-2xl mx-auto leading-relaxed">
               Organisasi masyarakat sipil yang berkomitmen untuk pelestarian lingkungan, peningkatan kualitas pendidikan, dan ketangguhan masyarakat terhadap bencana dan iklim.
@@ -183,7 +183,7 @@ export default function Home() {
       <section className="bg-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            
+
             {/* Left Column: Real-time Articles */}
             <div className="lg:col-span-7">
               <div className="flex justify-between items-end mb-8">
@@ -334,7 +334,7 @@ export default function Home() {
             <div>
               <h4 className="text-white font-bold text-sm mb-3">Kantor Pusat</h4>
               <p className="text-xs text-gray-400 leading-relaxed">
-                Jl. Cingised Komp. Pertanian No. 15, Cisaranten Endah, Arcamanik, Kota Bandung<br/>
+                Jl. Cingised Komp. Pertanian No. 15, Cisaranten Endah, Arcamanik, Kota Bandung<br />
                 WhatsApp: 0852-1135-2636
               </p>
             </div>
