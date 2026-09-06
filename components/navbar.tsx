@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
-import { Leaf } from 'lucide-react';
 
 
 export function Navbar() {

@@ -43,8 +43,11 @@ export const metadata: Metadata = {
   },
   generator: 'nextjs.app',
   icons: {
-    icon: '/icon.png',
-    apple: '/icon.png',
+    icon: [
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/apple-icon.png',
   },
 }
 

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
-import { Leaf, LayoutDashboard, Newspaper, Image, Users, LogOut } from 'lucide-react';
+import { LayoutDashboard, Newspaper, Image, Users, LogOut } from 'lucide-react';
 
 const MENU_ITEMS = [
   {
@@ -44,8 +44,8 @@ export function AdminSidebar() {
       {/* Logo Header */}
       <div className="p-6 border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-900/50">
-            <Leaf className="w-6 h-6" />
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center p-1 shadow-lg shadow-black/20 overflow-hidden">
+            <img src="/icon.png" alt="YSN" className="w-full h-full object-contain" />
           </div>
           <div>
             <h1 className="font-bold text-white text-sm tracking-wide">Sahabat Nusantara</h1>
