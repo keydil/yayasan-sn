@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/lib/auth-context'
 import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -64,11 +65,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="id" className="bg-background">
-      <body className="font-sans antialiased text-foreground">
+    <html lang="id" className="bg-background" suppressHydrationWarning>
+      <body className="font-sans antialiased text-foreground" suppressHydrationWarning>
         <AuthProvider>
           <Navbar />
           {children}
+          <Footer />
         </AuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

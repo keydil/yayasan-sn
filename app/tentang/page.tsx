@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
-import { MapPin, Phone, Mail, Instagram, Shield, FileText, Building2, CreditCard } from 'lucide-react';
+import { MapPin, Phone, Mail, Shield, FileText, Building2, CreditCard } from 'lucide-react';
+import { InstagramIcon, YoutubeIcon, TiktokIcon } from '@/components/footer';
 import { dataService, PengurusItem } from '@/lib/supabase';
 
 const coreValues = [
@@ -332,16 +333,47 @@ export default function TentangPage() {
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-              <Instagram className="w-6 h-6 text-emerald-600 mb-3" />
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Media Sosial</p>
-              <a
-                href="https://instagram.com/sahabatnusantara.id"
-                target="_blank"
-                rel="noreferrer"
-                className="text-emerald-700 hover:underline font-bold text-sm block mt-1"
-              >
-                @sahabatnusantara.id
-              </a>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
+                  <InstagramIcon className="w-4 h-4" />
+                </span>
+                <span className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
+                  <YoutubeIcon className="w-4 h-4" />
+                </span>
+                <span className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700">
+                  <TiktokIcon className="w-4 h-4" />
+                </span>
+              </div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Media Sosial</p>
+              <div className="space-y-1.5">
+                <a
+                  href="https://www.instagram.com/yayasan.sahabatnusantara"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 text-emerald-700 hover:underline font-bold text-xs"
+                >
+                  <InstagramIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="truncate">@yayasan.sahabatnusantara</span>
+                </a>
+                <a
+                  href="https://www.youtube.com/@sahabatnusantarabandung"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 text-emerald-700 hover:underline font-bold text-xs"
+                >
+                  <YoutubeIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="truncate">@sahabatnusantarabandung</span>
+                </a>
+                <a
+                  href="https://www.tiktok.com/@sahabat.nusantara13"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 text-emerald-700 hover:underline font-bold text-xs"
+                >
+                  <TiktokIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="truncate">@sahabat.nusantara13</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

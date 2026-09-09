@@ -303,48 +303,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-950 text-gray-400 py-12 border-t border-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 className="text-white font-bold text-sm mb-3">Yayasan Sahabat Nusantara</h4>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                Organisasi masyarakat sipil yang mendorong keadilan sosial, pendidikan, dan kelestarian lingkungan hidup di Indonesia.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-bold text-sm mb-3">Pilar Program</h4>
-              <ul className="space-y-2 text-xs">
-                <li><Link href="/program/penghijauan" className="hover:text-emerald-400 transition-colors">Penghijauan & Reboisasi</Link></li>
-                <li><Link href="/program/pendidikan" className="hover:text-emerald-400 transition-colors">Pendidikan & Kapasitas</Link></li>
-                <li><Link href="/program/pengelolaan-sampah" className="hover:text-emerald-400 transition-colors">Pengelolaan Sampah</Link></li>
-                <li><Link href="/program/konservasi-air" className="hover:text-emerald-400 transition-colors">Konservasi Air</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold text-sm mb-3">Legalitas Resmi</h4>
-              <ul className="space-y-2 text-xs">
-                <li><span className="text-gray-300">Akta Notaris No. 01 (2025)</span></li>
-                <li><span className="text-gray-300">AHU-0000732.AH.01.04</span></li>
-                <li><span className="text-gray-300">NIB: 1301250085449</span></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold text-sm mb-3">Kantor Pusat</h4>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                Jl. Cingised Komp. Pertanian No. 15, Cisaranten Endah, Arcamanik, Kota Bandung<br />
-                WhatsApp: 0852-1135-2636
-              </p>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-900 pt-8 text-center text-xs text-gray-500">
-            <p>&copy; 2025 Yayasan Sahabat Nusantara. Semua Hak Dilindungi.</p>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }
