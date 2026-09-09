@@ -106,7 +106,7 @@ export default function Home() {
               Yayasan Sahabat Nusantara
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              Membangun Keadilan Sosial & <span className="text-emerald-300">Ketangguhan Ekologis</span>
+              Bersama Wujudkan Keadilan Sosial dan <span className="text-emerald-300">Ketangguhan Ekologis</span>
             </h1>
             <p className="text-lg sm:text-xl text-emerald-100 max-w-2xl mx-auto leading-relaxed">
               Organisasi masyarakat sipil yang berkomitmen untuk pelestarian lingkungan, peningkatan kualitas pendidikan, dan ketangguhan masyarakat terhadap bencana dan iklim.
