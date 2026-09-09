@@ -101,7 +101,7 @@ export default function TentangPage() {
               <div className="relative">
                 <span className="inline-block text-emerald-300 text-xs font-bold tracking-widest uppercase mb-4">VISI</span>
                 <h2 className="text-2xl sm:text-3xl font-bold mb-6 leading-snug">
-                  "Terwujudnya masyarakat yang adil, berdaya, berpengetahuan, dan tangguh secara sosial dan ekologis."
+                  &ldquo;Menjadi penggerak utama pemulihan ekosistem dan transformasi sirkular di Indonesia demi terciptanya bumi yang lestari dan masyarakat yang berdaya iklim.&rdquo;
                 </h2>
                 <div className="w-16 h-1 bg-emerald-400 rounded-full" />
               </div>
