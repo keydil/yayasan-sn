@@ -118,7 +118,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/tentang">
-                <Button variant="outline" className="px-8 py-3 text-base rounded-xl border-emerald-300 text-emerald-100 hover:bg-white/10">
+                <Button className="bg-white hover:bg-emerald-50 text-emerald-950 font-bold px-8 py-3 text-base rounded-xl shadow-lg hover:shadow-xl border border-white transition-all">
                   Profil & Legalitas
                 </Button>
               </Link>
