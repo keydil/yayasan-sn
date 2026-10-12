@@ -313,22 +313,22 @@ export default function TentangPage() {
               <MapPin className="w-6 h-6 text-emerald-600 mb-3" />
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Alamat Kantor</p>
               <p className="text-gray-800 text-sm font-medium leading-relaxed">
-                Jl. Cingised, Komp. Pertanian No. 15, RT 001 / RW 005, Kel. Cisaranten Endah, Kec. Arcamanik, Kota Bandung
+                Kp. Cipicung Girang No. 479, RT 003 / RW 010, Kel. Ciumbuleuit, Kec. Cidadap, Kota Bandung
               </p>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
               <Phone className="w-6 h-6 text-emerald-600 mb-3" />
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Telepon / WhatsApp</p>
-              <p className="text-gray-800 text-sm font-bold mt-1">0852-1135-2636</p>
-              <p className="text-gray-800 text-sm font-bold">0821-2795-0955</p>
+              <p className="text-gray-800 text-sm font-bold mt-1">+62 821-1880-4809</p>
+              <p className="text-gray-800 text-sm font-bold">+62 822-1826-3886</p>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
               <Mail className="w-6 h-6 text-emerald-600 mb-3" />
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Email Resmi</p>
-              <a href="mailto:yayasan.sn@gmail.com" className="text-emerald-700 hover:underline font-bold text-sm block mt-1">
-                yayasan.sn@gmail.com
+              <a href="mailto:sahabatnusantara15@gmail.com" className="text-emerald-700 hover:underline font-bold text-sm block mt-1">
+                sahabatnusantara15@gmail.com
               </a>
             </div>
 
