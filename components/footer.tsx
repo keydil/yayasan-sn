@@ -185,7 +185,7 @@ export function Footer() {
               </div>
               <div className="flex justify-between items-baseline gap-2">
                 <dt className="text-gray-500">Kemenkumham RI</dt>
-                <dd className="font-medium text-gray-800 text-right">AHU-0000732.AH.01.04</dd>
+                <dd className="font-medium text-gray-800 text-right">-</dd>
               </div>
               <div className="flex justify-between items-baseline gap-2">
                 <dt className="text-gray-500">NIB</dt>

@@ -273,7 +273,7 @@ export default function TentangPage() {
                 <Shield className="w-6 h-6" />
               </div>
               <p className="text-xs font-bold text-blue-700 uppercase tracking-wider mb-1">SK Kemenkumham</p>
-              <p className="font-bold text-gray-900 text-lg mb-2">AHU-0000732.AH.01.04.Tahun 2025</p>
+              <p className="font-bold text-gray-900 text-lg mb-2">-</p>
               <p className="text-gray-500 text-xs mt-auto">Kementerian Hukum & HAM RI</p>
             </div>
 
