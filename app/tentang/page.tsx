@@ -264,8 +264,8 @@ export default function TentangPage() {
                 <FileText className="w-6 h-6" />
               </div>
               <p className="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1">Akta Notaris</p>
-              <p className="font-bold text-gray-900 text-lg mb-2">No. 01 Tanggal 06 Januari 2025</p>
-              <p className="text-gray-500 text-xs mt-auto">Notaris Dra. Hj. Tati Sunarti, S.H., M.Kn</p>
+              <p className="font-bold text-gray-900 text-lg mb-2">No. 03 Tanggal 09 Oktober 2025</p>
+              <p className="text-gray-500 text-xs mt-auto">Akta Pendirian Yayasan</p>
             </div>
 
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm flex flex-col">
@@ -282,8 +282,8 @@ export default function TentangPage() {
                 <Building2 className="w-6 h-6" />
               </div>
               <p className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-1">NPWP & NIB</p>
-              <p className="font-bold text-gray-900 text-base mb-1">NPWP: 10.000.000.0-429.000</p>
-              <p className="text-gray-600 text-xs font-semibold mb-2">NIB: 1301250085449</p>
+              <p className="font-bold text-gray-900 text-base mb-1">NPWP: 1000000006769695</p>
+              <p className="text-gray-600 text-xs font-semibold mb-2">NIB: 2612250021319</p>
               <p className="text-gray-500 text-xs mt-auto">Direktorat Jenderal Pajak</p>
             </div>
 
@@ -292,7 +292,7 @@ export default function TentangPage() {
                 <CreditCard className="w-6 h-6" />
               </div>
               <p className="text-xs font-bold text-purple-700 uppercase tracking-wider mb-1">Rekening Resmi</p>
-              <p className="font-bold text-gray-900 text-base mb-1">Bank BJB 0147633719100</p>
+              <p className="font-bold text-gray-900 text-base mb-1">Bank BJB 0157189336100</p>
               <p className="text-gray-500 text-xs mt-auto">a.n. Yayasan Sahabat Nusantara</p>
             </div>
           </div>

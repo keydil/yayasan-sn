@@ -181,7 +181,7 @@ export function Footer() {
             <dl className="text-xs text-gray-600 space-y-2.5 font-normal">
               <div className="flex justify-between items-baseline gap-2">
                 <dt className="text-gray-500">Akta Notaris</dt>
-                <dd className="font-medium text-gray-800 text-right">No. 01 (2025)</dd>
+                <dd className="font-medium text-gray-800 text-right">No. 03 (2025)</dd>
               </div>
               <div className="flex justify-between items-baseline gap-2">
                 <dt className="text-gray-500">Kemenkumham RI</dt>
@@ -189,7 +189,7 @@ export function Footer() {
               </div>
               <div className="flex justify-between items-baseline gap-2">
                 <dt className="text-gray-500">NIB</dt>
-                <dd className="font-medium text-gray-800 text-right">1301250085449</dd>
+                <dd className="font-medium text-gray-800 text-right">2612250021319</dd>
               </div>
             </dl>
           </div>
